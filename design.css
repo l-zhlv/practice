@@ -1,0 +1,89 @@
+Button{
+   background-color: #f0b7a4;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 200px;
+    height: 70px;
+    margin: 20px auto;
+    font: normal 17px arial
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+h1 {
+
+    padding: 10px;
+
+}
+
+ img {
+            margin-top: 20px;
+        }
+
+.top-nav {
+        background-color: #faf0e6;
+        color: white;
+        text-align: center;
+        padding: 10px;
+
+    }
+
+ .italic-centered-text {
+  font-style: italic;
+  text-align: center;
+     color: #d35400;
+}
+
+ .bold-text {
+  font-weight: bold;
+}
+
+ .new1 {
+   font-style: unset;
+ }
+
+ .large-text {
+  font-size: 20px;
+}
+
+ .it {
+     font-style: italic;
+ }
+
+ .font {
+   font-style: oblique;
+     font-size: 17px;
+ }
+
+
+.text-wavy{
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: #f0b7a4;
+}
+
+
+ .ag {
+  font-family: Noto Sans, sans-serif;
+  font-weight: 200;
+  line-height: 1.5;
+ }
+
+ .optima {
+     font-family: Optima, sans-serif;
+     font-weight: 200;
+  line-height: 1.5;
+ }
+
+ .last {
+    font-family: Bookman, URW Bookman L, serif;
+      font-weight: 200;
+  line-height: 3;
+     font-size: 17px;
+ }
