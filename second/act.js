@@ -33,13 +33,12 @@ fetch('./waybill.json') //подключение файла с данными
       row.innerHTML = `
          
           <td>${waybill.waybillNum}/${waybill.waybillDep} ${formatDateTime(waybill.waybillDate)}</td>
-          <td>${waybill.waybillDepFrom}</td>
-          <td>${waybill.waybillDepTo}</td>
-          <td>${formatTime(waybill.waybillSendDate)}</td>
+           <td>${formatTime(waybill.waybillSendDate)}</td>
+           <td>${waybill.waybillDepFrom}</td>
+          <td>${waybill.waybillSender}</td> 
           <td>${formatTime(waybill.waybillReceiveDate)}</td>
-          <td>${waybill.waybillSender}</td>
+          <td>${waybill.waybillDepTo}</td>
           <td>${waybill.waybillReceiver}</td>
-        
       `;
       table.appendChild(row);//добавление в таблицу
     });
