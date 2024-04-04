@@ -1,10 +1,17 @@
 .top-nav {
-        background-color: #faf0e6;
-        color: white;
-        text-align: center;
-        padding: 10px;
+    background-color: #faf0e6;
+    color: white;
+    text-align: center;
+    padding: 10px;
 
-    }
+}
+
+.to {
+    display: inline-flex;
+    flex-direction: row;
+     padding: 20px;
+    margin-right: 10px;
+}
 
 .about {
 display: flex;
@@ -14,6 +21,18 @@ display: flex;
     justify-content: flex-start;
 
     padding: 20px;
+    margin-right: 10px;
+}
+
+
+#waybillTable {
+  border-collapse: collapse;
+}
+
+#waybillTable th, #waybillTable td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
 }
 
 Button{
@@ -29,6 +48,7 @@ Button{
     font: normal 17px arial;
     transition: .2s linear;
     box-shadow: 0 0 0 2px white, 0 0 0 4px #f0b7a4;
+    margin-right: 30px;
 }
 
 .bud{

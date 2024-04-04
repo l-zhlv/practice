@@ -9,8 +9,8 @@
 <body>
 
  <div class="top-nav">
-<div class="about">
-     <p><Button>Создать накладную</Button></p>
+    <div class="about">
+      <p><Button>Создать накладную</Button></p>
       <p><Button>Получить накладную</Button></p>
       <p><Button>Отправить накладную</Button></p>
       <p><Button>Редактировать накладную</Button></p>
@@ -18,18 +18,41 @@
 
     </div>
 
-<form action="" method="get" style=text-align:right>
-  <input name="s" placeholder="Искать здесь..." type="search">
+     <div class="to">
+        <select>
+           <option>По дате</option>
+           <option>По отделам</option>
+        </select>
 
-</form>
+        <div><form action="" method="get" style=text-align:right>
+             <input name="s" placeholder="Искать здесь..." type="search">
+             </form>
+        </div>
+    </div>
 </div>
 
 
  <div id="output" class="table">
 
+     <table id="waybillTable">
+
+  <thead>
+    <tr>
+      <th>Номер накладной:</th>
+      <th>Отдел отправления:</th>
+      <th>Отдел получения:</th>
+      <th>Дата отправления:</th>
+      <th>Дата получения:</th>
+      <th>Отправитель:</th>
+      <th>Получатель:</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+</table>
+
  </div>
-
-
   <script src="act.js"></script>
 
 </body>
