@@ -1,0 +1,197 @@
+.top-nav {
+    background-color: #faf0e6;
+    color: white;
+    text-align: center;
+    padding: 10px;
+
+}
+
+#out {
+    float: left;
+    width: 100%; /* Ширина контейнера для первой таблицы */
+
+
+}
+
+#out2 {
+    float: left;
+    width: 100%; /* Ширина контейнера для второй таблицы */
+
+}
+
+.hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+.to {
+    display: inline-flex;
+    flex-direction: row;
+    padding: 20px;
+    margin-right: 10px;
+}
+
+
+.about {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 20px;
+    margin-right: 10px;
+}
+
+
+#waybillTable {
+    border-collapse: collapse;
+}
+
+#waybillTable th, #waybillTable td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+
+#passportTable {
+    border-collapse: collapse;
+}
+
+#passportTable th, #passportTable td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+
+
+#nomTable {
+    border-collapse: collapse;
+}
+
+#nomTable th, #nomTable td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+
+
+Button {
+    background-color: #f0b7a4;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 200px;
+    height: 70px;
+    margin: 20px auto;
+    font: normal 17px arial;
+    transition: .2s linear;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #f0b7a4;
+    margin-right: 30px;
+}
+
+.bud {
+    background-color: #f0b7a4;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100px;
+    height: 40px;
+    margin: 20px auto;
+    font: normal 17px arial;
+    transition: .2s linear;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #f0b7a4;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    margin-bottom: 18px; /*Отступ снизу от таблицы*/
+    padding: 0; /*Отступы внутри таблицы*/
+    font-size: 13px; /*Размер шрифта*/
+    border: 1px solid #dddddd; /*Граница таблицы*/
+    border-spacing: 0; /*Отступы между границами ячеек*/
+    border-collapse: separate; /*Границы ячеек не склеиваются*/
+    -webkit-border-radius: 5px; /*Радиус скругления углов у таблицы Safari, Chrome*/
+    -moz-border-radius: 10px; /*Радиус скругления углов у таблицы Mozilla*/
+    border-radius: 5px; /*Радиус скругления углов у таблицы*/
+    color: #666666; /*Цвет текста в таблице*/
+    font-family: Arial; /*Семейство шрифтов*/
+    display: inline-block;
+    margin-right: 5px; /* Расстояние между таблицами */
+    width: 100%;
+
+
+}
+
+table, th, td {
+    /* border: 1px solid black;*/
+
+    padding: 10px 10px 9px; /*Отступы внутри ячеек*/
+    line-height: 18px; /*Межстрочный интервал*/
+    text-align: left; /*Выравнивание текста по левому краю*/
+}
+
+table th {
+    padding-top: 9px; /*Отступы внутри ячеек*/
+    font-weight: bold; /*Установка жирного начертания шрифта*/
+    vertical-align: middle; /*Выравнивание по вертикали. Текст находится по середине*/
+    color: black; /*Черный цвет в ячейках заголовков таблицы*/
+}
+
+table td {
+    vertical-align: top; /*Выравнивание содержимого ячейки по верхнему краю*/
+    border-top: 1px solid #ddd; /*Верхняя граница ячейки*/
+}
+
+table th + th, table td + td, table th + td {
+    border-left: 1px solid #ddd; /*Стиль для левой границы между двумя ячейками*/
+}
+
+table thead tr:first-child th:first-child, /*Первая строка первая ячейка в заголовке таблицы*/
+table tbody tr:first-child td:first-child /*Первая строка первая ячейка в теле таблицы*/
+{
+    -webkit-border-radius: 5px 0 0 0;
+    -moz-border-radius: 5px 0 0 0;
+    border-radius: 5px 0 0 0;
+}
+
+table thead tr:first-child th:last-child,
+table tbody tr:first-child td:last-child {
+    -webkit-border-radius: 0 5px 0 0;
+    -moz-border-radius: 0 5px 0 0;
+    border-radius: 0 5px 0 0;
+}
+
+table tbody tr:last-child td:first-child {
+    -webkit-border-radius: 0 0 0 5px;
+    -moz-border-radius: 0 0 0 5px;
+    border-radius: 0 0 0 5px;
+}
+
+table tbody tr:last-child td:last-child {
+    -webkit-border-radius: 0 0 5px 0;
+    -moz-border-radius: 0 0 5px 0;
+    border-radius: 0 0 5px 0;
+}
+
+
+tr.content:hover {
+    background-color: peachpuff;
+}
+
+.tables {
+    display: flex;
+    justify-content: space-between;
+}

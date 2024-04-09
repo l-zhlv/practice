@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Накладные</title>
+    <link rel="stylesheet" href="../csss/style.css">
+    <link rel="icon" type="image/png" href="../img/icon1.png">
+</head>
+<body>
+
+
+<div class="top-nav">
+    <div class="about">
+
+            <p>
+                <Button>Создать накладную</Button>
+            </p>
+            <p>
+                <Button>Получить накладную</Button>
+            </p>
+            <p>
+                <Button>Отправить накладную</Button>
+            </p>
+            <p>
+                <Button>Редактировать накладную</Button>
+            </p>
+
+    </div>
+
+    <div class="to">
+        <select id="sortOptions">
+            <option>Сортировать по...</option>
+            <option value="ранние даты">Сортировать по ранним датам</option>
+            <option value="поздние даты">Сортировать по поздним датам</option>
+
+        </select>
+
+        <div>
+            <form action="" method="get" style=text-align:right>
+                <input name="s" placeholder="Искать здесь..." type="search">
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div id="output" class="table">
+    <table id="waybillTable">
+
+        <thead>
+        <tr>
+            <th>Номер накладной:</th>
+            <th>Дата отправления:</th>
+            <th>Отдел отправления:</th>
+            <th>Отправитель:</th>
+            <th>Дата получения:</th>
+            <th>Отдел получения:</th>
+            <th>Получатель:</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="content">
+
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<script src="../jss/act.js"></script>
+
+</body>
+</html>
