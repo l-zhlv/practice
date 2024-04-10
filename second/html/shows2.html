@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Номенклатура и паспорт</title>
-    <link rel="stylesheet" href="../csss/passnom.css">
+    <link rel="stylesheet" href="../css/passnom.css">
     <link rel="icon" type="image/png" href="../img/icon1.png">
 </head>
 <body>
@@ -24,7 +24,29 @@
 
 </div>
 
-<div class="tables">
+<!--<div class="tables">-->
+
+ <div id="out2" class="table">
+        <table id="nomTable">
+            <thead>
+            <tr>
+                <th>Номер накладной:</th>
+                <th>Обозначение:</th>
+                <th>Наименование:</th>
+                <th>Номер заказа:</th>
+                <th>Количество деталей:</th>
+                <th>Количество заготовок:</th>
+                <th>Количество образцов:</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="content">
+
+            </tr>
+            </tbody>
+        </table>
+     </div>
+
     <div id="out" class="table">
         <table id="passportTable">
             <thead>
@@ -44,30 +66,11 @@
             </tbody>
         </table>
     </div>
-
-    <div id="out2" class="table">
-        <table id="nomTable">
-            <thead>
-            <tr>
-                <th>Дизайн:</th>
-                <th>Название:</th>
-                <th>Номер заказа:</th>
-                <th>Количество деталей:</th>
-                <th>Количество заготовок:</th>
-                <th>Количество образцов:</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="content">
-
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-</div>
+<button id="hidePassportTableButton" style="display:none;">Скрыть СП</button>
 
 
-<script src="../jss/nom.js"></script>
+<!--    </div>-->
+
+<script src="../js/nom.js"></script>
 </body>
 </html>

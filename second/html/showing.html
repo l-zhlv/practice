@@ -1,31 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Накладные</title>
-    <link rel="stylesheet" href="../csss/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="icon" type="image/png" href="../img/icon1.png">
+
 </head>
 <body>
 
 
 <div class="top-nav">
+    <header>МКАДД Накладные</header>
     <div class="about">
 
             <p>
                 <Button>Создать накладную</Button>
             </p>
-            <p>
-                <Button>Получить накладную</Button>
-            </p>
-            <p>
-                <Button>Отправить накладную</Button>
-            </p>
-            <p>
-                <Button>Редактировать накладную</Button>
-            </p>
 
     </div>
+
+
 
     <div class="to">
         <select id="sortOptions">
@@ -41,21 +36,18 @@
             </form>
         </div>
     </div>
-</div>
 
 
-<div id="output" class="table">
+
+    <div id="output" class="table">
     <table id="waybillTable">
 
         <thead>
         <tr>
-            <th>Номер накладной:</th>
-            <th>Дата отправления:</th>
-            <th>Отдел отправления:</th>
-            <th>Отправитель:</th>
-            <th>Дата получения:</th>
-            <th>Отдел получения:</th>
-            <th>Получатель:</th>
+            <td>Номер накладной:</td>
+            <td colspan="3">Отправление:</td>
+            <td colspan="3">Получение:</td>
+
         </tr>
         </thead>
         <tbody>
@@ -67,7 +59,15 @@
 
 </div>
 
-<script src="../jss/act.js"></script>
+
+
+
+</div>
+
+
+
+
+<script src="../js/act.js"></script>
 
 </body>
 </html>
