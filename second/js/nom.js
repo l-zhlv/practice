@@ -83,3 +83,4 @@ document.getElementById('hidePassportTableButton').addEventListener('click', fun
     document.querySelector('#passportTable').style.display = 'none';
     this.style.display = 'none';
 });
+

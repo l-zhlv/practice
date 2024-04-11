@@ -1,3 +1,38 @@
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
 .pagination {
     display: flex;
     justify-content: center;
@@ -114,20 +149,6 @@ Button{
 
 }
 
-/*.budu{*/
-/*    background-color: #f0b7a4;*/
-/*    color: #fff;*/
-/*    padding: 5px 10px;*/
-/*    border: none;*/
-/*    border-radius: 5px;*/
-/*    cursor: pointer;*/
-/*    width: 100px;*/
-/*    height: 40px;*/
-/*    margin: 20px auto;*/
-/*    font: normal 17px arial;*/
-/*    transition: .2s linear;*/
-/*    box-shadow: 0 0 0 2px white, 0 0 0 4px #f0b7a4;*/
-/*}*/
 
 body {
     background-color: #f2dcf2d7;
@@ -135,75 +156,73 @@ body {
 
 table {
     width: 100%;
-    margin-bottom: 18px; /*Отступ снизу от таблицы*/
-    padding: 0; /*Отступы внутри таблицы*/
-    font-size: 15px; /*Размер шрифта*/
-    border: 2px solid black; /*Граница таблицы*/
-    border-spacing: 0; /*Отступы между границами ячеек*/
-    border-collapse: separate; /*Границы ячеек не склеиваются*/
-    -webkit-border-radius: 5px; /*Радиус скругления углов у таблицы Safari, Chrome*/
-    -moz-border-radius: 10px; /*Радиус скругления углов у таблицы Mozilla*/
-    border-radius: 5px; /*Радиус скругления углов у таблицы*/
-    color: black; /*Цвет текста в таблице*/
-    font-family: Arial; /*Семейство шрифтов*/
+    margin-bottom: 18px;
+    padding: 0;
+    font-size: 15px;
+    border: 2px solid black;
+    border-spacing: 0;
+    border-collapse: separate;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 10px;
+    border-radius: 5px;
+    color: black;
+    font-family: Arial;
     background-color: #fadefcd7;
+    table-layout: fixed;
+}
+
+table th, table td {
+    border: 2px solid black;
+    padding: 10px;
+    word-break: break-all; /* Добавлено для автоматического переноса слов */
+    white-space: normal; /* Добавлено для подстраивания ширины колонок */
+}
+
+table th {
+    padding-top: 9px;
+    font-weight: bold;
+    vertical-align: middle;
+    color: black;
+}
+
+table td {
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+
+table th+th, table td+td, table th+td {
+    border-left: 1px solid #ddd;
+}
+
+tr.content:hover {
+    background-color: #f2d0f1d7;
 }
 
 th {
     font-weight: bold;
 }
 
-table,  td {
- /* border: 1px solid black;*/
-
-    padding: 10px 10px 9px; /*Отступы внутри ячеек*/
-    line-height: 18px; /*Межстрочный интервал*/
-    text-align: left; /*Выравнивание текста по левому краю*/
+td {
+    padding: 10px;
+    line-height: 18px;
+    text-align: left;
+    border: 2px solid black;
 }
 
-table th {
-    padding-top: 9px; /*Отступы внутри ячеек*/
-    font-weight: bold; /*Установка жирного начертания шрифта*/
-    vertical-align: middle; /*Выравнивание по вертикали. Текст находится по середине*/
-    color: black; /*Черный цвет в ячейках заголовков таблицы*/
+th, td {
+    border-width: 2px;
 }
 
-table td {
-    vertical-align: top; /*Выравнивание содержимого ячейки по верхнему краю*/
-    border-top: 1px solid #ddd; /*Верхняя граница ячейки*/
+.table-wrapper {
+    overflow-x: auto;
+    white-space: nowrap;
 }
 
-table th+th,table td+td,table th+td {
-    border-left: 1px solid #ddd; /*Стиль для левой границы между двумя ячейками*/
-}
-
-table thead tr:first-child th:first-child, /*Первая строка первая ячейка в заголовке таблицы*/
-table tbody tr:first-child td:first-child /*Первая строка первая ячейка в теле таблицы*/{
-    -webkit-border-radius: 5px 0 0 0;
-    -moz-border-radius: 5px 0 0 0;
-    border-radius: 5px 0 0 0;
-}
-
-table thead tr:first-child th:last-child,
-table tbody tr:first-child td:last-child  {
-    -webkit-border-radius: 0 5px 0 0;
-    -moz-border-radius: 0 5px 0 0;
-    border-radius: 0 5px 0 0;
-}
-
-table tbody tr:last-child td:first-child   {
-    -webkit-border-radius: 0 0 0 5px;
-    -moz-border-radius: 0 0 0 5px;
-    border-radius: 0 0 0 5px;
-}
-
-table tbody tr:last-child td:last-child {
-    -webkit-border-radius: 0 0 5px 0;
-    -moz-border-radius: 0 0 5px 0;
-    border-radius: 0 0 5px 0;
+/* Применение к таблице */
+.table-wrapper table {
+    min-width: 100%;
 }
 
 
-tr.content:hover {
-    background-color: #f2d0f1d7;
-}
+
+

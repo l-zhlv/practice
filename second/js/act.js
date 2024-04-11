@@ -21,19 +21,19 @@ function GetDate(dateTimeString) {
 }
 
 
-function searchAllPages(searchValue) {
-    const table = document.getElementById('waybillTable');
-    const rows = table.querySelectorAll('tbody tr');
-
-    rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        if (text.includes(searchValue)) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    });
-}
+// function searchAllPages(searchValue) {
+//     const table = document.getElementById('waybillTable');
+//     const rows = table.querySelectorAll('tbody tr');
+//
+//     rows.forEach(row => {
+//         const text = row.textContent.toLowerCase();
+//         if (text.includes(searchValue)) {
+//             row.style.display = '';
+//         } else {
+//             row.style.display = 'none';
+//         }
+//     });
+// }
 
 //функция для поиска на странице данных
 // function searchTable() {
@@ -134,3 +134,24 @@ fetch('../json/waybill.json') //подключение файла с инфор�
         }
     })
     .catch(error => console.error(error)); //поимка ошибок
+// Получаем элементы модального окна и кнопку для открытия
+var modal = document.getElementById("myModal");
+var btn = document.getElementById("openModalBtn");
+var closeBtn = document.getElementsByClassName("close")[0];
+
+// Открываем модальное окно при клике на кнопку
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+// Закрываем модальное окно при клике на крестик
+closeBtn.onclick = function() {
+    modal.style.display = "none";
+}
+
+// Закрываем модальное окно при клике за его пределами
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
