@@ -14,76 +14,63 @@
     <header>МКАДД Накладные</header>
     <div class="about">
 
-        <!--            <p>-->
-        <!--                <Button></Button>-->
-        <!--            </p>-->
-        <div class="top-nav">
+
             <div class="about">
                 <p>
                     <button id="openModalBtn">Создать накладную</button>
                 </p>
-            </div>
-        </div>
 
-        <div id="myModal" class="modal">
+                <div>
+                    <form action="" method="get" style=text-align:right>
+                        <input name="s" placeholder="Искать здесь..." type="search">
+                    </form>
+                </div>
+            </div>
+
+
+        <div id="modal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                 <h>Создать новую накладную</h>
+                <h2>Заполните информацию для создания накладной:</h2>
 
+                <form id="infoForm" action="#">
 
-                    <p align="left">1. </p>
-                    <p align="left">2. </p>
+                    <label for="identifier">Идентификатор:</label>
+                    <input type="number" id="identifier" name="identifier">
 
+                    <label for="number">Номер:</label>
+                    <input type="number" id="number" name="number">
+
+                    <label for="number">Цех:</label>
+                    <input type="number" id="dep" name="dep">
+
+                    <label for="date">Дата:</label>
+                    <input type="date" id="date" name="date">
+
+                    <label for="departure">Цех отправления:</label>
+                    <input type="number" id="departure" name="departure">
+
+                    <label for="destination">Цех получения:</label>
+                    <input type="number" id="destination" name="destination">
+
+                    <label for="departureDate">Дата отправления:</label>
+                    <input type="datetime-local" id="departureDate" name="departureDate">
+
+                    <label for="arrivalDate">Дата получения:</label>
+                    <input type="datetime-local" id="arrivalDate" name="arrivalDate">
+
+                    <label for="sender">Отправитель:</label>
+                    <input type="text" id="sender" name="sender">
+
+                    <label for="sender">Получатель:</label>
+                    <input type="text" id="receiver" name="receiver">
+
+                    <button type="submit">Сохранить</button>
+                </form>
             </div>
         </div>
 
     </div>
-
-
-
-    <div class="to">
-        <select id="sortOptions">
-            <option>Сортировать по...</option>
-            <option value="ранние даты">Сортировать по ранним датам</option>
-            <option value="поздние даты">Сортировать по поздним датам</option>
-
-        </select>
-
-        <div>
-            <form action="" method="get" style=text-align:right>
-                <input name="s" placeholder="Искать здесь..." type="search">
-            </form>
-        </div>
-    </div>
-
-
-<!--    <div id="output" class="table">-->
-<!--        <table id="waybillTable">-->
-
-<!--            <thead>-->
-<!--            <tr>-->
-<!--                <th rowspan="2">Номер накладной:</th>-->
-<!--                <th colspan="3">Отравление</th>-->
-<!--                <th colspan="3">Получение</th>-->
-<!--            <tr>-->
-<!--                <th>Дата отправления</th>-->
-<!--                <th>Цех отправления</th>-->
-<!--                <th>Отправитель</th>-->
-<!--                <th>Дата получения</th>-->
-<!--                <th>Цех получения</th>-->
-<!--                <th>Получатель</th>-->
-<!--            </tr>-->
-
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            <tr class="content">-->
-
-<!--            </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
-
-<!--    </div>-->
 
     <div id="output" class="table">
         <div class="table-container">
@@ -112,15 +99,24 @@
         </div>
     </div>
 
-
-
-
 </div>
 
 
 
+<div class="pagination">
 
+    <ul>
+<!--        <li class = "btn prev"><span><i class = "fas fa-angle-left"></i>Назад</span></li>-->
+<!--        <li class = "numb active"><span>1</span></li>-->
+<!--        <li class = "numb"><span>2</span></li>-->
+<!--        <li class = "dots"><span>...</span></li>-->
+<!--        <li class = "numb"><span>4</span></li>-->
+<!--        <li class = "numb"><span>5</span></li>-->
+<!--        <li class = "dots"><span>...</span></li>-->
+<!--        <li class = "numb"><span>7</span></li>-->
+<!--        <li class = "btn next"><span>Вперёд<i class = "fas fa-angle-right"></i></span></li>-->
+    </ul>
+</div>
 <script src="../js/act.js"></script>
-
 </body>
 </html>

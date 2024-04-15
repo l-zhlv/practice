@@ -9,6 +9,15 @@
 <body>
 <div class="top-nav">
     <div class="about">
+        <p>Номер накладной:</p>
+        <p class='waybillNum' style="text-indent: 15px;"></p>
+        <p style="text-indent: 15px; ">Время отправления:</p>
+        <p class='waybillSenDate' style="text-indent: 15px; "></p>
+        <p style="text-indent: 15px; ">Время получения:</p>
+        <p class='waybillRecDate' style="text-indent: 15px; "></p>
+
+    </div>
+    <div class="about">
 
         <p>
             <Button>Добавить СП к накладной</Button>
@@ -38,11 +47,10 @@
 
 <!--<div class="tables">-->
 
- <div id="out2" class="table">
-        <table id="nomTable">
-            <thead>
+<div id="out2" class="table">
+    <table id="nomTable">
+        <thead>
             <tr>
-                <th>Номер накладной:</th>
                 <th>Обозначение:</th>
                 <th>Наименование:</th>
                 <th>Номер заказа:</th>
@@ -50,18 +58,18 @@
                 <th>Количество заготовок:</th>
                 <th>Количество образцов:</th>
             </tr>
-            </thead>
-            <tbody>
+        </thead>
+        <tbody>
             <tr class="content">
 
             </tr>
-            </tbody>
-        </table>
-     </div>
+        </tbody>
+    </table>
+</div>
 
-    <div id="out" class="table">
-        <table id="passportTable">
-            <thead>
+<div id="out" class="table" style="display: none;">
+    <table id="passportTable">
+        <thead>
             <tr>
                 <th>Номер паспорта:</th>
                 <th>Цех:</th>
@@ -70,15 +78,17 @@
                 <th>Количество заготовок:</th>
                 <th>Количество образцов:</th>
             </tr>
-            </thead>
-            <tbody>
+        </thead>
+        <tbody>
             <tr class="content">
 
             </tr>
-            </tbody>
-        </table>
-    </div>
-<button id="hidePassportTableButton" style="display:none;">Скрыть СП</button>
+        </tbody>
+    </table>
+</div>
+
+
+
 
 
 <!--    </div>-->
@@ -86,6 +96,9 @@
 
 
 
-<script src="../js/nom.js"></script>
+<script src="../js/nom.js">
+
+
+</script>
 </body>
 </html>
