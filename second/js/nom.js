@@ -7,6 +7,62 @@ function ClearPassportTable() {
     tableBody.innerHTML = ''; // Очищение содержимого tbody
 }
 
+//удаление данных из json (пока не работает (Т.Т) )
+// document.getElementById('deleteButton').addEventListener('click', function() {
+//     document.getElementById('myModal').style.display = 'block';
+// });
+//
+// document.getElementById('cancelDeleteBtn').addEventListener('click', function() {
+//     document.getElementById('myModal').style.display = 'none';
+// });
+//
+ //вызов подтверждения
+//  document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+//
+//     document.getElementById('deleteButton').addEventListener('click', function() {
+//     let waybillIDToDelete = 'waybillID';
+//
+//     let waybillData = JSON.parse(localStorage.getItem('waybillData'));
+//     let nomenclatureData = JSON.parse(localStorage.getItem('nomenclatureData'));
+//     let passportData = JSON.parse(localStorage.getItem('passportData'));
+//
+//     // Удаление записей с соответствующим waybillID из waybillData
+//     waybillData = waybillData.filter(item => item.waybillID !== waybillIDToDelete);
+//     localStorage.setItem('waybillData', JSON.stringify(waybillData));
+//
+//     // Удаление записей с соответствующим waybillID из nomenclatureData
+//     nomenclatureData = nomenclatureData.filter(item => item.waybillID !== waybillIDToDelete);
+//     localStorage.setItem('nomenclatureData', JSON.stringify(nomenclatureData));
+//
+//     // Удаление записей с соответствующим waybillID из passportData
+//     passportData = passportData.filter(item => item.waybillID !== waybillIDToDelete);
+//     localStorage.setItem('passportData', JSON.stringify(passportData));
+//
+//
+// });
+//
+// });
+ClearPassportTable();
+GetPassportWaybillID();
+
+fetch('../json/waybill.json')
+.then(response => response.json())
+.then(data => {
+    localStorage.setItem('waybillData', JSON.stringify(data));
+});
+
+fetch('../json/nomenclature.json')
+.then(response => response.json())
+.then(data => {
+    localStorage.setItem('nomenclatureData', JSON.stringify(data));
+});
+
+fetch('../json/passport.json')
+.then(response => response.json())
+.then(data => {
+    localStorage.setItem('passportData', JSON.stringify(data));
+});
+
 document.getElementById('nomTable').addEventListener('click', function() {
     const secondTable = document.getElementById('passportTable');
     if (secondTable.style.display === 'none') {
@@ -20,62 +76,35 @@ document.getElementById('nomTable').addEventListener('click', function() {
     }
 });
 
-
-
-// document.getElementById('infoForm').addEventListener('submit', function(event) {
-//     event.preventDefault();
-//
-//     const formData = new FormData(this);
-//     const data = {};
-//     formData.forEach((value, key) => {
-//         data[key] = value;
-//     });
-//
-//     const jsonData = JSON.stringify(data);
-//
-//     // Сохранение данных в файл waybill.json
-//     const fs = require('fs');
-//     fs.writeFile('waybill.json', jsonData, (err) => {
-//         if (err) {
-//             console.error(err);
-//             return;
-//         }
-//         console.log('Данные успешно сохранены в файл waybill.json');
-//     });
-//
-//     // Очистка формы после сохранения
-//     this.reset();
-// });
-
 //функция для отображения таблицы с номенклатурой
-document.getElementById('nomTable').addEventListener('click', function(event) {
+document.getElementById('nomTable').addEventListener('click', function (event) {
     const secondTable = document.getElementById('passportTable');
     const tableBody = document.querySelector('#nomTable tbody');
 
     if (event.target.tagName === 'TD') {
-        // Получаем текущую строку
+// Получаем текущую строку
         const currentRow = event.target.closest('tr');
 
-        // Проверяем, отображается ли уже вторая таблица для выбранной строки
+// Проверяем, отображается ли уже вторая таблица для выбранной строки
         if (currentRow.nextSibling === secondTable) {
-            // Если отображается, скрываем вторую таблицу
+// Если отображается, скрываем вторую таблицу
             secondTable.style.display = 'none';
-            // Очищаем содержимое второй таблицы
+// Очищаем содержимое второй таблицы
             document.querySelector('#passportTable tbody').innerHTML = '';
         } else {
-            // Скрываем вторую таблицу для других строк таблицы
+// Скрываем вторую таблицу для других строк таблицы
             if (document.querySelector('#passportTable tbody').innerHTML !== '') {
                 document.querySelector('#passportTable tbody').innerHTML = '';
                 secondTable.style.display = 'none';
             }
 
-            // Показываем вторую таблицу сразу под строкой первой таблицы
+// Показываем вторую таблицу сразу под строкой первой таблицы
             secondTable.style.display = 'table';
 
-            // Вставляем вторую таблицу после текущей строки
+// Вставляем вторую таблицу после текущей строки
             currentRow.parentNode.insertBefore(secondTable, currentRow.nextSibling);
 
-            // Получаем данные для второй таблицы
+// Получаем данные для второй таблицы
             let waybillID = currentRow.querySelector('td:first-child').textContent; // Предполагая, что waybillID находится в первой ячейке строки
 
             fetch('../json/passport.json')
@@ -98,7 +127,6 @@ document.getElementById('nomTable').addEventListener('click', function(event) {
         }
     }
 });
-
 function GetNomenclatureWaybillID() {
     const tableBody = document.querySelector('#nomTable tbody');
     const passportTable = document.querySelector('#passportTable');

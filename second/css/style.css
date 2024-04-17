@@ -1,8 +1,10 @@
-
 .selected {
-    background-color: yellow;
+    background-color:#9999FF;
 }
 
+.selected td {
+    border: solid blue 1px;
+}
 
 .modal {
     display: none;
@@ -174,13 +176,17 @@ header {
     margin-right: 10px;
 }
 
+
+
 .about {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    padding: 20px;
+    /*align-items: center;*/
     margin-right: 10px;
+    padding: 5px;
 }
+
 
 
 #waybillTable {

@@ -9,12 +9,12 @@
 <body>
 <div class="top-nav">
     <div class="about">
-        <p>Номер накладной:</p>
-        <p class='waybillNum' style="text-indent: 15px;"></p>
-        <p style="text-indent: 15px; ">Время отправления:</p>
-        <p class='waybillSenDate' style="text-indent: 15px; "></p>
-        <p style="text-indent: 15px; ">Время получения:</p>
-        <p class='waybillRecDate' style="text-indent: 15px; "></p>
+        <header><p>Номер накладной:</p></header>
+        <header><p class='waybillNum' style="text-indent: 15px;"></p></header>
+        <header><p style="text-indent: 15px; ">Время отправления:</p></header>
+        <header><p class='waybillSenDate' style="text-indent: 15px; "></p></header>
+        <header><p style="text-indent: 15px; ">Время получения:</p></header>
+        <header><p class='waybillRecDate' style="text-indent: 15px; "></p></header>
 
     </div>
     <div class="about">
@@ -27,6 +27,8 @@
             <Button>Редактировать накладную</Button>
         </p>
 
+        <p><button id="deleteButton">Удалить накладную</button></p>
+
          <p>
             <Button>Отправить накладную</Button>
         </p>
@@ -35,13 +37,18 @@
             <Button>Получить накладную</Button>
         </p>
 
-        <form action="showing.html">
-            <p>
-                <Button>Вернуться к накладным</Button>
-            </p>
+        <form action="showing.html" style="display: inline;">
+            <p><Button>Вернуться к накладным</Button></p>
         </form>
     </div>
 
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <p>Вы уверены, что хотите удалить накладную?</p>
+        <button id="confirmDeleteBtn">Да</button>
+        <button id="cancelDeleteBtn">Отмена</button>
+    </div>
+</div>
 
 </div>
 

@@ -11,21 +11,31 @@
 
 
 <div class="top-nav">
-    <header>МКАДД Накладные</header>
+    <header>МКАДД Список накладных</header>
     <div class="about">
 
 
-            <div class="about">
-                <p>
-                    <button id="openModalBtn">Создать накладную</button>
-                </p>
+        <div class="about">
+            <p>
+                <button id="openModalBtn">Создать накладную</button>
+            </p>
 
-                <div>
-                    <form action="" method="get" style=text-align:right>
-                        <input name="s" placeholder="Искать здесь..." type="search">
-                    </form>
-                </div>
+            <div>
+                <form action="" method="get" style=text-align:right>
+                    <input name="s" placeholder="Искать здесь..." type="search">
+                </form>
             </div>
+
+            <div class="about">
+                <select style=text-align:right >
+                    <option>Цех</option>
+                    <option>4</option>
+                    <option>518</option>
+                    <option>343</option>
+                    <option>129</option>
+                </select>
+            </div>
+        </div>
 
 
         <div id="modal" class="modal">
@@ -35,35 +45,9 @@
 
                 <form id="infoForm" action="#">
 
-                    <label for="identifier">Идентификатор:</label>
-                    <input type="number" id="identifier" name="identifier">
-
-                    <label for="number">Номер:</label>
-                    <input type="number" id="number" name="number">
-
-                    <label for="number">Цех:</label>
-                    <input type="number" id="dep" name="dep">
-
-                    <label for="date">Дата:</label>
-                    <input type="date" id="date" name="date">
-
-                    <label for="departure">Цех отправления:</label>
-                    <input type="number" id="departure" name="departure">
-
                     <label for="destination">Цех получения:</label>
                     <input type="number" id="destination" name="destination">
 
-                    <label for="departureDate">Дата отправления:</label>
-                    <input type="datetime-local" id="departureDate" name="departureDate">
-
-                    <label for="arrivalDate">Дата получения:</label>
-                    <input type="datetime-local" id="arrivalDate" name="arrivalDate">
-
-                    <label for="sender">Отправитель:</label>
-                    <input type="text" id="sender" name="sender">
-
-                    <label for="sender">Получатель:</label>
-                    <input type="text" id="receiver" name="receiver">
 
                     <button type="submit">Сохранить</button>
                 </form>
@@ -74,20 +58,20 @@
 
     <div id="output" class="table">
         <div class="table-container">
-            <table id="waybillTable">
+            <table id="waybillTable" style="border-collapse: collapse;">
                 <thead>
                 <tr>
-                    <th rowspan="2">Номер накладной:</th>
+                    <th data-type="number" rowspan="2">Номер накладной:</th>
                     <th colspan="3">Отправление</th>
                     <th colspan="3">Получение</th>
                 </tr>
                 <tr>
-                    <th>Дата отправления</th>
-                    <th>Цех отправления</th>
-                    <th>Отправитель</th>
-                    <th>Дата получения</th>
-                    <th>Цех получения</th>
-                    <th>Получатель</th>
+                    <th data-type="data">Дата</th>
+                    <th data-type="number">Цех</th>
+                    <th data-type="string">Ответственный</th>
+                    <th data-type="data">Дата</th>
+                    <th data-type="number">Цех</th>
+                    <th data-type="string">Ответственный</th>
                 </tr>
                 </thead>
                 <tbody>
