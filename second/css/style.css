@@ -1,5 +1,5 @@
 .selected {
-    background-color:#9999FF;
+    background-color: #9999FF;
 }
 
 .selected td {
@@ -42,7 +42,7 @@
 }
 
 form {
-    margin-top: 20px;
+    margin-top: 18px;
 }
 
 label {
@@ -70,14 +70,9 @@ button:hover {
 }
 
 
-.pagination ul{
-    display: flex;
-    justify-content: center;
-    padding: 8px;
-    border-radius: 50px;
-}
 
-.pagination ul li {
+
+.pagination li {
     color: black;
     list-style: none;
     line-height: 45px;
@@ -88,63 +83,36 @@ button:hover {
     transition: all 0.3s ease;
 }
 
-.pagination ul li.numb{
+.pagination li.num {
     border-radius: 50%;
     height: 45px;
     width: 45px;
     margin: 0 3px;
 }
 
-.pagination ul li.btn{
-    padding: 0 20px;
-}
 
-.pagination ul li.prev{
-    border-radius: 25px 5px 5 px 25px;
-}
 
-.pagination ul li.next{
-    border-radius: 5px 25px 25 px 5px;
-}
-
-.pagination ul li.dots {
-    font-size: 22px;
-    cursor: default;
-}
-
-.pagination ul li.active,
-.pagination ul li.numb:hover,
-.pagination ul li.btn:hover{
+.pagination li.active {
     color: white;
-      background-color: #a8eef7d7;
+    background-color: #a8eef7d7;
 }
 
-/*.pagination_list {*/
-/*    display: flex;*/
-/*    list-style-type: none;*/
-/*}*/
 
-/*.pagination_item {*/
-/*    padding: 8px;*/
-/*    margin: 8px;*/
-/*    cursor: pointer;*/
-/*}*/
-
-#pagination-button {
-    background-color: #d4f5ffd7; /* средний розовый */
-    color: black; /* темно-розовый */
-    border: 1px solid #8a60fcd7; /* темно-розовый */
+.pagination {
+    display: flex;
+    justify-content: center;
+    color: black;
     padding: 6px 12px;
     border-radius: 4px;
     cursor: pointer;
 }
 
-.pagination-button:hover {
-    background-color: #a8eef7d7; /* светло-розовый */
-}
+/*.pagination:hover {*/
+/*    background-color: #a8eef7d7; !* светло-розовый *!*/
+/*}*/
 
 header {
-     color: black; /* темно-розовый */
+    color: black; /* темно-розовый */
     text-align: center;
     font-size: x-large;
     font-weight: bold;
@@ -159,14 +127,25 @@ header {
 
 }
 
+.select {
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+    margin: 10px 11px 10px 10px;
+}
+
+input {
+    padding: 7px 0;
+}
+
 .hidden {
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  white-space: nowrap;
-  width: 1px;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
 }
 
 .to {
@@ -177,16 +156,14 @@ header {
 }
 
 
-
 .about {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     /*align-items: center;*/
-    margin-right: 10px;
+    margin: 10px 0;
     padding: 5px;
 }
-
 
 
 #waybillTable {
@@ -223,8 +200,8 @@ header {
     text-align: center;
 }
 
-Button{
-   background-color: #d4f5ffd7; /* светло-розовый */
+Button {
+    background-color: #d4f5ffd7; /* светло-розовый */
     color: black;
     border: 3px solid #59d3e3d7; /* темно-розовый */
     padding: 8px 16px;
@@ -275,7 +252,7 @@ table td {
     border-top: 1px solid #ddd;
 }
 
-table th+th, table td+td, table th+td {
+table th + th, table td + td, table th + td {
     border-left: 1px solid #ddd;
 }
 
