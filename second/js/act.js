@@ -43,15 +43,11 @@ function searchAllPages(tableRows, searchValue) {
 function searchTable() {
     const input = document.querySelector('input[name="s"]').value.toLowerCase(); // ввод искомого значения
     const rows = document.querySelectorAll('#waybillTable tbody tr');
-
     searchAllPages(rows, input);
 }
 
 //const ulTag = document.querySelector('.pagination ul');
-
 document.querySelector('input[name="s"]').addEventListener('input', searchTable); //получение введенной информации
-
-
 let waybillTable = document.getElementById('waybillTable');
 
 waybillTable.onclick = function (e) {
@@ -103,7 +99,6 @@ fetch('../json/waybill.json') //подключение файла с инфор�
 
 //условие вывода кнопки предыдущей страницы
             if (page > 1) {
-                // AddInfoInLiElement("Предыдущая", 'click', prevPage)
                 li = document.createElement("li")
                 li.innerHTML = "Назад";
                 li.addEventListener('click', (event) => {
@@ -114,14 +109,12 @@ fetch('../json/waybill.json') //подключение файла с инфор�
 
 //условие вывода кнопки первой страницы
             if (page > 2) {
-                //AddInfoInLiElement(1, "num")
                 li = document.createElement("li")
                 li.innerHTML = 1;
                 li.classList.add("num");
                 items.push(li)
 //условие вывода кнопки троеточия
                 if (page > 3) {
-                    // AddInfoInLiElement("...")
                     li = document.createElement("li")
                     li.innerHTML = "...";
                     items.push(li)
@@ -179,6 +172,7 @@ fetch('../json/waybill.json') //подключение файла с инфор�
             }
             displayPage(page)//вызов функции отрисовки данных активной страницы
         }
+
         function displayPage(pageNum) {
             let start = rowsCount * (pageNum - 1);
             let end = start + rowsCount;
@@ -199,7 +193,7 @@ fetch('../json/waybill.json') //подключение файла с инфор�
                 row.classList.add("content");
                 row.setAttribute('id', `${waybill.waybillID}`); //получаем ID
                 row.addEventListener('click', function () { //функция для перехода на другую страницу
-                    sendId(row.id, `${waybill.waybillNum}/${waybill.waybillDep} ${GetDate(waybill.waybillDate)}`, `${GetDateAndTime(waybill.waybillSendDate)}`, `${GetDateAndTime(waybill.waybillReceiveDate)}`); //получаем номер накладной для демонстрации на следующей странице
+                    sendId(row.id, `${waybill.waybillNum}/${waybill.waybillDep} ${GetDate(waybill.waybillDate)}`, `${GetDateAndTime(waybill.waybillSendDate)}`, `${waybill.waybillDepFrom}`, `${waybill.waybillSender}`, `${GetDateAndTime(waybill.waybillReceiveDate)}`, `${waybill.waybillDepTo}`, `${waybill.waybillReceiver}`); //получаем номер накладной для демонстрации на следующей странице
                 });
 //вывод данных
                 row.innerHTML = `
@@ -217,7 +211,7 @@ fetch('../json/waybill.json') //подключение файла с инфор�
 
         const tableBody = document.querySelector('.table tbody')
         const pagination = document.querySelector('.pagination');
-        let rowsCount = 10;//количество строк данных на одной странице
+        let rowsCount = 20;//количество строк данных на одной странице
         let active; //переменная для хранения активной кнопки отобращения страницы
         let pageCount = Math.ceil(data.length / rowsCount)//количество страниц с данными
 
@@ -225,12 +219,10 @@ fetch('../json/waybill.json') //подключение файла с инфор�
     })
 
 
-
-
 //функция для получения ID и номера номенклатуры
-            function sendId(id, waybillNumDepDate, waybillDateSend, waybillGetDate) {
-                window.location.href = `../html/shows2.html?id=${id}&waybillNumDepDate=${waybillNumDepDate}&waybillDateSend=${waybillDateSend}&waybillGetDate=${waybillGetDate}`;
-            }
+function sendId(id, waybillNumDepDate, waybillDateSend, waybillDepFrom, waybillSender, waybillGetDate, waybillDepTo, waybillReceiver) {
+    window.location.href = `../html/shows2.html?id=${id}&waybillNumDepDate=${waybillNumDepDate}&waybillDateSend=${waybillDateSend}&waybillDepFrom=${waybillDepFrom}&waybillSender=${waybillSender}&waybillGetDate=${waybillGetDate}&waybillDepTo=${waybillDepTo}&waybillReceiver=${waybillReceiver}`;
+}
 
 const modal = document.getElementById('modal');
 const openModalBtn = document.getElementById('openModalBtn');

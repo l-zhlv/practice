@@ -70,8 +70,6 @@ button:hover {
 }
 
 
-
-
 .pagination li {
     color: black;
     list-style: none;
@@ -89,7 +87,6 @@ button:hover {
     width: 45px;
     margin: 0 3px;
 }
-
 
 
 .pagination li.active {
@@ -166,8 +163,24 @@ input {
 }
 
 
+/* Стили для контейнера с прокруткой */
+.table-container {
+    overflow-x: auto;
+    max-height: 400px; /* Максимальная высота контейнера */
+}
+
+/* Стили для таблицы */
 #waybillTable {
     border-collapse: collapse;
+    width: 100%; /* Ширина таблицы равна ширине контейнера */
+}
+
+/* Стили для фиксированного заголовка */
+#waybillTable thead {
+    position: sticky;
+    top: 0;
+    background-color: #e9ccedd7; /* Цвет фона для заголовка */
+    z-index: 1;
 }
 
 #waybillTable th, #waybillTable td {
@@ -279,12 +292,5 @@ th, td {
     overflow-x: auto;
     white-space: nowrap;
 }
-
-/* Применение к таблице */
-.table-wrapper table {
-    min-width: 100%;
-}
-
-
 
 

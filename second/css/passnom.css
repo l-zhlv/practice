@@ -5,6 +5,21 @@ header {
     font-weight: bold;
 }
 
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid black;
+    text-align: left;
+    padding: 8px;
+}
+
+.passportRow td {
+    text-align: left;
+}
+
 .modal {
     display: none;
     position: fixed;
@@ -120,8 +135,9 @@ button:hover {
 }
 
 #passportTable {
-    border-collapse: collapse;
+    display: none;
 }
+
 
 #passportTable th, #passportTable td {
     border: 1px solid black;
