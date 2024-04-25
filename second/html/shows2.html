@@ -15,7 +15,7 @@
     </p>
 
     <p>
-        <Button>Редактировать накладную</Button>
+        <Button id="edit-button">Редактировать накладную</Button>
     </p>
 
     <p>
@@ -47,11 +47,8 @@
         <header><p class='waybillDepsFrom' style="text-indent: 15px; "></p></header>
         <header><p style="text-indent: 15px; ">Отправитель:</p></header>
         <header><p class='waybillSending' style="text-indent: 15px; "></p></header>
-
-
     </div>
     <div class="about">
-
         <header><p>Время получения:</p></header>
         <header><p class='waybillRecDate' style="text-indent: 15px; "></p></header>
         <header><p style="text-indent: 15px; ">Цех получения:</p></header>
@@ -59,18 +56,31 @@
         <header><p style="text-indent: 15px; ">Получатель:</p></header>
         <header><p class='waybillReceiver' style="text-indent: 15px; "></p></header>
     </div>
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <p>Вы уверены, что хотите удалить накладную?</p>
-            <button id="confirmDeleteBtn">Да</button>
-            <button id="cancelDeleteBtn">Отмена</button>
-        </div>
-    </div>
-
 </div>
 
-<!--<div class="tables">-->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Данные из накладной</h2>
+        <div id="waybillData"></div>
+        <button id="saveChanges">Сохранить изменения</button>
+    </div>
+</div>
 
+<!--<div id="modal" class="modal">-->
+<!--  <div class="modal-content">-->
+<!--    <span class="close">&times;</span>-->
+<!--    <h2>Редактировать накладную</h2>-->
+<!--      &lt;!&ndash; Поля для редактирования данных &ndash;&gt;-->
+<!--      <label for="waybillNumDepDate">Номер накладной и место отправления:</label>-->
+<!--      <input type="text" id="waybillNumDepDate" name="waybillNumDepDate">-->
+<!--      &lt;!&ndash; Другие поля для редактирования данных &ndash;&gt;-->
+<!--      &lt;!&ndash; ... &ndash;&gt;-->
+<!--      <div id="waybillData"></div>-->
+<!--    <button id="saveChanges">Сохранить изменения</button>-->
+
+  </div>
+</div>
 
 <div id="out2" class="table" style="display: none;">
     <table id="passportTable">
@@ -85,7 +95,6 @@
             </tr>
         </thead>
         <tbody>
-
         </tbody>
     </table>
 </div>
@@ -103,7 +112,6 @@
             </tr>
         </thead>
         <tbody>
-
         </tbody>
     </table>
 </div>

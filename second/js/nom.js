@@ -42,6 +42,46 @@ function ClearPassportTable() {
     tableBody.innerHTML = ''; // Очищение содержимого tbody
 }
 
+
+document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('modal');
+        const editButton = document.getElementById('edit-button');
+        const closeBtn = document.querySelector('.close');
+        const waybillDataDiv = document.getElementById('waybillData');
+
+        // Открыть модальное окно по нажатию на кнопку
+        editButton.addEventListener('click', function () {
+            modal.style.display = 'block';
+        });
+
+        // Закрыть модальное окно при клике на крестик
+        closeBtn.onclick = function () {
+            modal.style.display = 'none';
+        }
+
+        // Закрыть модальное окно при клике вне окна
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+
+        // Формирование HTML с данными из waybill
+        const waybillHTML = `
+            <p><strong>Номер накладной и место отправления:</strong> ${waybillNumDepDate}</p>
+            <p><strong>Дата отправления:</strong> ${waybillDateSend}</p>
+            <p><strong>Место отправления:</strong> ${waybillDepFrom}</p>
+            <p><strong>Отправитель:</strong> ${waybillSender}</p>
+            <p><strong>Дата получения:</strong> ${waybillGetDate}</p>
+            <p><strong>Место получения:</strong> ${waybillDepTo}</p>
+            <p><strong>Получатель:</strong> ${waybillReceiver}</p>
+        `;
+
+        // Вставка HTML с данными в модальное окно
+        waybillDataDiv.innerHTML = waybillHTML;
+    });
+
 ClearPassportTable();
 GetPassportWaybillID();
 

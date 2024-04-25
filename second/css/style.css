@@ -169,6 +169,8 @@ input {
     max-height: 400px; /* Максимальная высота контейнера */
 }
 
+
+
 /* Стили для таблицы */
 #waybillTable {
     border-collapse: collapse;

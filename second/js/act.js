@@ -221,8 +221,10 @@ fetch('../json/waybill.json') //подключение файла с инфор�
 
 //функция для получения ID и номера номенклатуры
 function sendId(id, waybillNumDepDate, waybillDateSend, waybillDepFrom, waybillSender, waybillGetDate, waybillDepTo, waybillReceiver) {
+    //const queryString = Object.keys(rowData).map(key => `${key}=${rowData[key]}`).join('&');
     window.location.href = `../html/shows2.html?id=${id}&waybillNumDepDate=${waybillNumDepDate}&waybillDateSend=${waybillDateSend}&waybillDepFrom=${waybillDepFrom}&waybillSender=${waybillSender}&waybillGetDate=${waybillGetDate}&waybillDepTo=${waybillDepTo}&waybillReceiver=${waybillReceiver}`;
 }
+
 
 const modal = document.getElementById('modal');
 const openModalBtn = document.getElementById('openModalBtn');
