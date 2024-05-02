@@ -248,6 +248,7 @@ window.onclick = function (event) {
     }
 }
 
+
 // Обработчик отправки формы
 //     infoForm.addEventListener('submit', function (e) {
 //         e.preventDefault();

@@ -1,38 +1,3 @@
-//удаление данных из json (пока не работает (Т.Т) )
-// document.getElementById('deleteButton').addEventListener('click', function() {
-//     document.getElementById('myModal').style.display = 'block';
-// });
-//
-// document.getElementById('cancelDeleteBtn').addEventListener('click', function() {
-//     document.getElementById('myModal').style.display = 'none';
-// });
-//
-//вызов подтверждения
-//  document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
-//
-//     document.getElementById('deleteButton').addEventListener('click', function() {
-//     let waybillIDToDelete = 'waybillID';
-//
-//     let waybillData = JSON.parse(localStorage.getItem('waybillData'));
-//     let nomenclatureData = JSON.parse(localStorage.getItem('nomenclatureData'));
-//     let passportData = JSON.parse(localStorage.getItem('passportData'));
-//
-//     // Удаление записей с соответствующим waybillID из waybillData
-//     waybillData = waybillData.filter(item => item.waybillID !== waybillIDToDelete);
-//     localStorage.setItem('waybillData', JSON.stringify(waybillData));
-//
-//     // Удаление записей с соответствующим waybillID из nomenclatureData
-//     nomenclatureData = nomenclatureData.filter(item => item.waybillID !== waybillIDToDelete);
-//     localStorage.setItem('nomenclatureData', JSON.stringify(nomenclatureData));
-//
-//     // Удаление записей с соответствующим waybillID из passportData
-//     passportData = passportData.filter(item => item.waybillID !== waybillIDToDelete);
-//     localStorage.setItem('passportData', JSON.stringify(passportData));
-//
-//
-// });
-//
-// });
 GetPassportWaybillID(); //вызов функции для отображения таблицы с номенклатурой
 GetNomenclatureWaybillID(); //вызов функции для отображения
 
@@ -43,44 +8,44 @@ function ClearPassportTable() {
 }
 
 
-document.addEventListener('DOMContentLoaded', function () {
-        const modal = document.getElementById('modal');
-        const editButton = document.getElementById('edit-button');
-        const closeBtn = document.querySelector('.close');
-        const waybillDataDiv = document.getElementById('waybillData');
-
-        // Открыть модальное окно по нажатию на кнопку
-        editButton.addEventListener('click', function () {
-            modal.style.display = 'block';
-        });
-
-        // Закрыть модальное окно при клике на крестик
-        closeBtn.onclick = function () {
-            modal.style.display = 'none';
-        }
-
-        // Закрыть модальное окно при клике вне окна
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-
-
-        // Формирование HTML с данными из waybill
-        const waybillHTML = `
-            <p><strong>Номер накладной и место отправления:</strong> ${waybillNumDepDate}</p>
-            <p><strong>Дата отправления:</strong> ${waybillDateSend}</p>
-            <p><strong>Место отправления:</strong> ${waybillDepFrom}</p>
-            <p><strong>Отправитель:</strong> ${waybillSender}</p>
-            <p><strong>Дата получения:</strong> ${waybillGetDate}</p>
-            <p><strong>Место получения:</strong> ${waybillDepTo}</p>
-            <p><strong>Получатель:</strong> ${waybillReceiver}</p>
-        `;
-
-        // Вставка HTML с данными в модальное окно
-        waybillDataDiv.innerHTML = waybillHTML;
-    });
+// document.addEventListener('DOMContentLoaded', function () {
+//     const modal = document.getElementById('modal');
+//     const editButton = document.getElementById('edit-button');
+//     const closeBtn = document.querySelector('.close');
+//     const waybillDataDiv = document.getElementById('waybillData');
+//
+//     // Открыть модальное окно по нажатию на кнопку
+//     editButton.addEventListener('click', function () {
+//         modal.style.display = 'block';
+//     });
+//
+//     // Закрыть модальное окно при клике на крестик
+//     closeBtn.onclick = function () {
+//         modal.style.display = 'none';
+//     }
+//
+//     // Закрыть модальное окно при клике вне окна
+//     window.onclick = function (event) {
+//         if (event.target == modal) {
+//             modal.style.display = 'none';
+//         }
+//     }
+//
+//
+//     // Формирование HTML с данными из waybill
+//     const waybillHTML = `
+//             <p><strong>Номер накладной и место отправления:</strong> ${waybillNumDepDate}</p>
+//             <p><strong>Дата отправления:</strong> ${waybillDateSend}</p>
+//             <p><strong>Место отправления:</strong> ${waybillDepFrom}</p>
+//             <p><strong>Отправитель:</strong> ${waybillSender}</p>
+//             <p><strong>Дата получения:</strong> ${waybillGetDate}</p>
+//             <p><strong>Место получения:</strong> ${waybillDepTo}</p>
+//             <p><strong>Получатель:</strong> ${waybillReceiver}</p>
+//         `;
+//
+//     // Вставка HTML с данными в модальное окно
+//     waybillDataDiv.innerHTML = waybillHTML;
+// });
 
 ClearPassportTable();
 GetPassportWaybillID();
@@ -243,57 +208,126 @@ function GetPassportWaybillID() {
     });
 }
 
-//удаление данных из json (пока не работает (Т.Т) )
-//функция для удаления записи из JSON
-// function deleteRecord(waybillIDToDelete) {
-//     let waybillData = JSON.parse(localStorage.getItem('waybillData'));
-//     let nomenclatureData = JSON.parse(localStorage.getItem('nomenclatureData'));
-//     let passportData = JSON.parse(localStorage.getItem('passportData'));
-//
-//     // Удаление записей с соответствующим waybillID из waybillData
-//     waybillData = waybillData.filter(item => item.waybillID !== waybillIDToDelete);
-//     localStorage.setItem('waybillData', JSON.stringify(waybillData));
-//
-//     // Удаление записей с соответствующим waybillID из nomenclatureData
-//     nomenclatureData = nomenclatureData.filter(item => item.waybillID !== waybillIDToDelete);
-//     localStorage.setItem('nomenclatureData', JSON.stringify(nomenclatureData));
-//
-//     // Удаление записей с соответствующим waybillID из passportData
-//     passportData = passportData.filter(item => item.waybillID !== waybillIDToDelete);
-//     localStorage.setItem('passportData', JSON.stringify(passportData));
-// }
-//
-// //обработчик события клика по кнопке удаления записи
-// document.getElementById('deleteButton').addEventListener('click', function() {
-//     let waybillIDToDelete = 'waybillID'; //замените на фактический ID записи, которую хотите удалить
-//     deleteRecord(waybillIDToDelete); //вызываем функцию удаления записи
-// });
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('modal');
+    const closeButton = document.querySelector('.close');
+    const saveButton = document.getElementById('saveChanges');
 
-//обработчик события клика по кнопке подтверждения удаления записи
-// document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
-//
-//     document.getElementById('deleteButton').addEventListener('click', function () {
-//         let waybillIDToDelete = 'waybillID';
-//
-//         let waybillData = JSON.parse(localStorage.getItem('waybillData'));
-//         let nomenclatureData = JSON.parse(localStorage.getItem('nomenclatureData'));
-//         let passportData = JSON.parse(localStorage.getItem('passportData'));
-//
-//         // Удаление записей с соответствующим waybillID из waybillData
-//         waybillData = waybillData.filter(item => item.waybillID !== waybillIDToDelete);
-//         localStorage.setItem('waybillData', JSON.stringify(waybillData));
-//
-//         // Удаление записей с соответствующим waybillID из nomenclatureData
-//         nomenclatureData = nomenclatureData.filter(item => item.waybillID !== waybillIDToDelete);
-//         localStorage.setItem('nomenclatureData', JSON.stringify(nomenclatureData));
-//
-//         // Удаление записей с соответствующим waybillID из passportData
-//         passportData = passportData.filter(item => item.waybillID !== waybillIDToDelete);
-//         localStorage.setItem('passportData', JSON.stringify(passportData));
-//
-//
-//     });
-//
-// });
+    // Открыть модальное окно при клике на кнопку "Редактировать накладную"
+    document.getElementById('edit-button').addEventListener('click', function () {
+        modal.style.display = 'block';
+        fillModalWithData(); // Заполнить поля модального окна данными из шапки таблицы
+    });
 
-//вызов подтверждения
+    // Закрыть модальное окно при клике на крестик
+    closeButton.addEventListener('click', function () {
+        modal.style.display = 'none';
+    });
+
+    // Закрыть модальное окно при клике вне окна
+    window.addEventListener('click', function (event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Функция для заполнения полей модального окна данными из шапки таблицы
+    function fillModalWithData() {
+        // Получить данные из шапки таблицы
+        const waybillNumDepDate = document.querySelector('.waybillNum').textContent;
+        const waybillSenDate = document.querySelector('.waybillSenDate').textContent;
+        const waybillDepsFrom = document.querySelector('.waybillDepsFrom').textContent;
+        const waybillSending = document.querySelector('.waybillSending').textContent;
+        const waybillRecDate = document.querySelector('.waybillRecDate').textContent;
+        const waybillDeppTo = document.querySelector('.waybillDeppTo').textContent;
+        const waybillReceiver = document.querySelector('.waybillReceiver').textContent;
+
+        // Заполнить поля модального окна данными из шапки таблицы
+        document.getElementById('waybillNumDepDate').value = waybillNumDepDate;
+        document.getElementById('waybillSenDate').value = waybillSenDate;
+        document.getElementById('waybillDepsFrom').value = waybillDepsFrom;
+        document.getElementById('waybillSending').value = waybillSending;
+        document.getElementById('waybillRecDate').value = waybillRecDate;
+        document.getElementById('waybillDeppTo').value = waybillDeppTo;
+        document.getElementById('waybillReceiver').value = waybillReceiver;
+    }
+
+    // Обработчик события нажатия на кнопку "Сохранить изменения"
+    saveButton.addEventListener('click', function () {
+        // Получить новые значения из полей модального окна
+        const waybillNumDepDate = document.getElementById('waybillNumDepDate').value;
+        const waybillSenDate = document.getElementById('waybillSenDate').value;
+        const waybillDepsFrom = document.getElementById('waybillDepsFrom').value;
+        const waybillSending = document.getElementById('waybillSending').value;
+        const waybillRecDate = document.getElementById('waybillRecDate').value;
+        const waybillDeppTo = document.getElementById('waybillDeppTo').value;
+        const waybillReceiver = document.getElementById('waybillReceiver').value;
+
+        // Обновить данные в шапке таблицы
+        document.querySelector('.waybillNum').textContent = waybillNumDepDate;
+        document.querySelector('.waybillSenDate').textContent = waybillSenDate;
+        document.querySelector('.waybillDepsFrom').textContent = waybillDepsFrom;
+        document.querySelector('.waybillSending').textContent = waybillSending;
+        document.querySelector('.waybillRecDate').textContent = waybillRecDate;
+        document.querySelector('.waybillDeppTo').textContent = waybillDeppTo;
+        document.querySelector('.waybillReceiver').textContent = waybillReceiver;
+
+        // Закрыть модальное окно
+        modal.style.display = 'none';
+    });
+});
+function deleteWaybillByID(waybillID) {
+    let waybillData = JSON.parse(localStorage.getItem('waybillData'));
+    let nomenclatureData = JSON.parse(localStorage.getItem('nomenclatureData'));
+    let passportData = JSON.parse(localStorage.getItem('passportData'));
+
+    // Удаление записей с соответствующим waybillID из waybillData
+    waybillData = waybillData.filter(item => item.waybillID !== waybillID);
+    localStorage.setItem('waybillData', JSON.stringify(waybillData));
+
+    // Удаление записей с соответствующим waybillID из nomenclatureData
+    nomenclatureData = nomenclatureData.filter(item => item.waybillID !== waybillID);
+    localStorage.setItem('nomenclatureData', JSON.stringify(nomenclatureData));
+
+    // Удаление записей с соответствующим waybillID из passportData
+    passportData = passportData.filter(item => item.waybillID !== waybillID);
+    localStorage.setItem('passportData', JSON.stringify(passportData));
+    
+
+    // Перенаправление на предыдущую страницу
+    history.back();
+}
+
+document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const waybillIDToDelete = urlParams.get('id');
+
+    deleteWaybillByID(waybillIDToDelete);
+
+    document.getElementById('myModal').style.display = 'none';
+});
+
+// Обработчик события нажатия на кнопку "Удалить накладную"
+document.getElementById('deleteButton').addEventListener('click', function () {
+    // Показать модальное окно подтверждения удаления
+    document.getElementById('myModal').style.display = 'block';
+});
+
+// Обработчик события нажатия на кнопку "Отмена" в модальном окне
+document.getElementById('cancelDeleteBtn').addEventListener('click', function () {
+    // Скрыть модальное окно
+    document.getElementById('myModal').style.display = 'none';
+});
+
+// Обработчик события нажатия на кнопку "Подтвердить удаление" в модальном окне
+document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+    // Получаем ID накладной из параметров URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const waybillIDToDelete = urlParams.get('id');
+
+    // Вызываем функцию удаления накладной по ID
+    deleteWaybillByID(waybillIDToDelete);
+
+    // Скрыть модальное окно после удаления
+    document.getElementById('myModal').style.display = 'none';
+});

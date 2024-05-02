@@ -62,8 +62,32 @@
     <div class="modal-content">
         <span class="close">&times;</span>
         <h2>Данные из накладной</h2>
-        <div id="waybillData"></div>
+        <div id="waybillData">
+            <label for="waybillNumDepDate">Номер накладной:</label>
+            <input type="text" id="waybillNumDepDate" name="waybillNumDepDate" disabled>
+            <label for="waybillSenDate">Время отправления:</label>
+            <input type="text" id="waybillSenDate" name="waybillSenDate">
+            <label for="waybillDepsFrom">Цех отправления:</label>
+            <input type="text" id="waybillDepsFrom" name="waybillDepsFrom">
+            <label for="waybillSending">Отправитель:</label>
+            <input type="text" id="waybillSending" name="waybillSending">
+            <label for="waybillRecDate">Время получения:</label>
+            <input type="text" id="waybillRecDate" name="waybillRecDate">
+            <label for="waybillDeppTo">Цех получения:</label>
+            <input type="text" id="waybillDeppTo" name="waybillDeppTo">
+            <label for="waybillReceiver">Получатель:</label>
+            <input type="text" id="waybillReceiver" name="waybillReceiver">
+        </div>
         <button id="saveChanges">Сохранить изменения</button>
+    </div>
+</div>
+
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Вы уверены, что хотите удалить накладную?</p>
+        <button id="confirmDeleteBtn">Подтвердить удаление</button>
+        <button id="cancelDeleteBtn">Отмена</button>
     </div>
 </div>
 
@@ -79,20 +103,20 @@
 <!--      <div id="waybillData"></div>-->
 <!--    <button id="saveChanges">Сохранить изменения</button>-->
 
-  </div>
+</div>
 </div>
 
 <div id="out2" class="table" style="display: none;">
     <table id="passportTable">
         <thead>
-            <tr>
-                <th>Номер паспорта:</th>
-                <th>Цех:</th>
-                <th>Год:</th>
-                <th>Количество деталей:</th>
-                <th>Количество заготовок:</th>
-                <th>Количество образцов:</th>
-            </tr>
+        <tr>
+            <th>Номер паспорта:</th>
+            <th>Цех:</th>
+            <th>Год:</th>
+            <th>Количество деталей:</th>
+            <th>Количество заготовок:</th>
+            <th>Количество образцов:</th>
+        </tr>
         </thead>
         <tbody>
         </tbody>
@@ -102,20 +126,19 @@
 <div id="out" class="table">
     <table id="nomTable">
         <thead>
-            <tr>
-                <th>Обозначение:</th>
-                <th>Наименование:</th>
-                <th>Номер заказа:</th>
-                <th>Количество деталей:</th>
-                <th>Количество заготовок:</th>
-                <th>Количество образцов:</th>
-            </tr>
+        <tr>
+            <th>Обозначение:</th>
+            <th>Наименование:</th>
+            <th>Номер заказа:</th>
+            <th>Количество деталей:</th>
+            <th>Количество заготовок:</th>
+            <th>Количество образцов:</th>
+        </tr>
         </thead>
         <tbody>
         </tbody>
     </table>
 </div>
-
 
 
 <script src="../js/nom.js">
