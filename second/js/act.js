@@ -27,56 +27,86 @@ function select_row(row) {
     row.classList.add('selected'); // Добавляем класс 'selected' кликнутой строке
 }
 
-//функция для поиска на всех страницах (не работает :") )
-function searchAllPages(tableRows, searchValue) {
-    tableRows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        if (text.includes(searchValue)) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
+function searchInJSON(searchValue) {
+    fetch('../json/waybill.json')
+        .then(response => response.json())
+        .then(data => {
+            const filteredData = data.filter(item => {
+                // Преобразуем все свойства объекта в нижний регистр для удобства сравнения
+                const lowerCaseItem = Object.keys(item).reduce((acc, key) => {
+                    acc[key] = typeof item[key] === 'string' ? item[key].toLowerCase() : item[key];
+                    return acc;
+                }, {});
+
+                // Проверяем, есть ли в свойствах объекта значение, содержащее искомую строку
+                return Object.values(lowerCaseItem).some(value => typeof value === 'string' && value.includes(searchValue.toLowerCase()));
+            });
+
+            // Отображаем отфильтрованные записи на странице
+            displayFilteredData(filteredData);
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+}
+
+function displayFilteredData(data) {
+    const tableBody = document.querySelector('#waybillTable tbody');
+    tableBody.innerHTML = ''; // Очищаем содержимое таблицы
+
+    data.forEach(waybill => {
+        let row = document.createElement('tr');
+        // Здесь формируем HTML-разметку для каждой строки таблицы и добавляем ее в tableBody
+        // Пример:
+        // row.innerHTML = `<td>${waybill.someProperty}</td><td>${waybill.anotherProperty}</td>...`;
+        tableBody.appendChild(row);
     });
+
+    // Пересчитываем пагинацию
+    const pageCount = Math.ceil(data.length / rowsCount);
+    CreatePagination(pageCount, 1, pagination);
 }
 
-//функция для поиска на странице
+// Функция для поиска на странице
 function searchTable() {
-    const input = document.querySelector('input[name="s"]').value.toLowerCase(); // ввод искомого значения
-    const rows = document.querySelectorAll('#waybillTable tbody tr');
-    searchAllPages(rows, input);
+    const input = document.querySelector('input[name="s"]').value; // Ввод искомого значения
+    searchInJSON(input);
 }
 
-//const ulTag = document.querySelector('.pagination ul');
-document.querySelector('input[name="s"]').addEventListener('input', searchTable); //получение введенной информации
-let waybillTable = document.getElementById('waybillTable');
-
-waybillTable.onclick = function (e) {
-    if (e.target.tagName !== 'TH') return;
-    let th = e.target;
-    sortTable(th.cellIndex, th.dataset.type);
-};
+document.querySelector('input[name="s"]').addEventListener('input', searchTable); // Получение введенной информации
 
 //функция для сортировки
+let sortOrder = ''; // Переменная для отслеживания порядка сортировки
+
 function sortTable(colNum, type) {
     let tbody = waybillTable.querySelector('tbody');
     let rowsArray = Array.from(tbody.rows);
     let compare;
 
-    switch (type) {
-        case 'number': //сортировка для числовых типов
-            compare = function (row1, row2) {
-                return parseInt(row1.cells[colNum].innerText) - parseInt(row2.cells[colNum].innerText);
-            };
-            break;
-        case 'string': //сортировка для строковых значений
-            compare = function (row1, row2) {
-                return row1.cells[colNum].innerText.localeCompare(row2.cells[colNum].innerText);
-            };
-            break;
+    // Определение типа сортировки
+    if (type === 'number' && colNum > 0) {
+        compare = function (row1, row2) {
+            return parseInt(row1.cells[colNum].innerText) - parseInt(row2.cells[colNum].innerText);
+        };
+    } else {
+        compare = function (row1, row2) {
+            return row1.cells[colNum].innerText.localeCompare(row2.cells[colNum].innerText);
+        };
     }
 
-    rowsArray.sort(compare);
+    // Проверка текущего порядка сортировки и применение соответствующего действия
+    if (sortOrder === 'asc') {
+        rowsArray.sort(compare);
+        sortOrder = 'desc'; // Изменение порядка на убывающий
+    } else if (sortOrder === 'desc') {
+        rowsArray.reverse(); // Возвращение в изначальный порядок
+        sortOrder = ''; // Сброс порядка сортировки
+    } else {
+        rowsArray.sort(compare);
+        sortOrder = 'asc'; // Изменение порядка на возрастающий
+    }
 
+    // Обновление содержимого таблицы
     tbody.innerHTML = '';
     rowsArray.forEach(function (row) {
         tbody.appendChild(row);
@@ -248,24 +278,6 @@ window.onclick = function (event) {
     }
 }
 
-
-// Обработчик отправки формы
-//     infoForm.addEventListener('submit', function (e) {
-//         e.preventDefault();
-//
-//         const formData = new FormData(infoForm);
-//         const jsonData = {};
-//         formData.forEach((value, key) => {
-//             jsonData[key] = value
-//         });
-//
-//         const jsonDataString = JSON.stringify(jsonData);
-//
-// //отправить данные на сервер или сохранить локально в файл waybill.json
-//         console.log(jsonDataString);
-//
-//         modal.style.display = 'none'; // Закрываем модальное окно
-//     });
 
 
 

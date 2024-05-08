@@ -1,5 +1,6 @@
-GetPassportWaybillID(); //вызов функции для отображения таблицы с номенклатурой
 GetNomenclatureWaybillID(); //вызов функции для отображения
+GetPassportWaybillID(); //вызов функции для отображения таблицы с номенклатурой
+
 
 //функция для удаления таблицы СП
 function ClearPassportTable() {
@@ -48,7 +49,7 @@ function ClearPassportTable() {
 // });
 
 ClearPassportTable();
-GetPassportWaybillID();
+// GetPassportWaybillID();
 
 
 fetch('../json/waybill.json')
@@ -190,8 +191,8 @@ function GetPassportWaybillID() {
             .then(response => response.json())
             .then(data => {
                 let needData = data.filter(passport => passport.waybillID == waybillID);
-
                 needData.forEach(passport => {
+
                     let row = document.createElement('tr');
 
                     for (let item in passport) {
@@ -208,6 +209,11 @@ function GetPassportWaybillID() {
     });
 }
 
+document.querySelectorAll("#nomTable tr").forEach(row => {
+    row.addEventListener('click', function() {
+        document.querySelector("#passportTable").classList.toggle('full-width');
+    });
+});
 document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('modal');
     const closeButton = document.querySelector('.close');
@@ -292,7 +298,7 @@ function deleteWaybillByID(waybillID) {
     // Удаление записей с соответствующим waybillID из passportData
     passportData = passportData.filter(item => item.waybillID !== waybillID);
     localStorage.setItem('passportData', JSON.stringify(passportData));
-    
+
 
     // Перенаправление на предыдущую страницу
     history.back();

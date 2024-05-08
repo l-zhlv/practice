@@ -1,16 +1,15 @@
 header {
-     color: black; /* темно-розовый */
+    color: black; /* темно-розовый */
     text-align: center;
     font-size: large;
     font-weight: bold;
 }
 
 
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
+/*table {*/
+/*    border-collapse: collapse;*/
+/*    width: 100%;*/
+/*}*/
 
 th, td {
     border: 1px solid black;
@@ -18,9 +17,9 @@ th, td {
     padding: 8px;
 }
 
-.passportRow td {
-    text-align: left;
-}
+/*.passportRow td {*/
+/*    text-align: left;*/
+/*}*/
 
 .modal {
     display: none;
@@ -95,13 +94,13 @@ button:hover {
 }
 
 .hidden {
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  white-space: nowrap;
-  width: 1px;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
 }
 
 .to {
@@ -118,6 +117,7 @@ button:hover {
     padding: 20px;
     margin-right: 10px;
 }
+
 .about form {
     margin-top: 0; /* Убираем верхний отступ у формы */
 }
@@ -125,6 +125,7 @@ button:hover {
 #waybillTable {
     border-collapse: collapse;
 }
+
 
 #waybillTable th, #waybillTable td {
     border: 1px solid black;
@@ -136,29 +137,39 @@ button:hover {
     display: table-row;
 }
 
-#passportTable {
-    display: none;
+.full-width {
+    width: 100%;
 }
 
-
-#passportTable th, #passportTable td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: center;
-}
-
-#nomTable {
+.table {
+    width: 100%;
+    display: table;
     border-collapse: collapse;
 }
 
-#nomTable th, #nomTable td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: center;
+#nomTable th, #passportTable th {
+    background-color: #fadefcd7;
+    color: black;
+    padding: 10px;
+    border: 1px solid #ddd;
 }
 
-Button{
-   background-color: #d4f5ffd7; /* светло-розовый */
+#nomTable td, #passportTable td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.inner-table {
+    width: 100%;
+}
+
+.inner-table.full-width {
+    width: 100vw;
+}
+
+
+Button {
+    background-color: #d4f5ffd7; /* светло-розовый */
     color: black;
     border: 3px solid #59d3e3d7; /* темно-розовый */
     padding: 8px 16px;
@@ -192,8 +203,8 @@ th {
     font-weight: bold;
 }
 
-table,  td {
- /* border: 1px solid black;*/
+table, td {
+    /* border: 1px solid black;*/
 
     padding: 10px 10px 9px; /*Отступы внутри ячеек*/
     line-height: 18px; /*Межстрочный интервал*/
@@ -212,25 +223,26 @@ table td {
     border-top: 1px solid #ddd; /*Верхняя граница ячейки*/
 }
 
-table th+th,table td+td,table th+td {
+table th + th, table td + td, table th + td {
     border-left: 1px solid #ddd; /*Стиль для левой границы между двумя ячейками*/
 }
 
 table thead tr:first-child th:first-child, /*Первая строка первая ячейка в заголовке таблицы*/
-table tbody tr:first-child td:first-child /*Первая строка первая ячейка в теле таблицы*/{
+table tbody tr:first-child td:first-child /*Первая строка первая ячейка в теле таблицы*/
+{
     -webkit-border-radius: 5px 0 0 0;
     -moz-border-radius: 5px 0 0 0;
     border-radius: 5px 0 0 0;
 }
 
 table thead tr:first-child th:last-child,
-table tbody tr:first-child td:last-child  {
+table tbody tr:first-child td:last-child {
     -webkit-border-radius: 0 5px 0 0;
     -moz-border-radius: 0 5px 0 0;
     border-radius: 0 5px 0 0;
 }
 
-table tbody tr:last-child td:first-child   {
+table tbody tr:last-child td:first-child {
     -webkit-border-radius: 0 0 0 5px;
     -moz-border-radius: 0 0 0 5px;
     border-radius: 0 0 0 5px;
@@ -247,9 +259,9 @@ tr.content:hover {
     background-color: #f2d0f1d7;
 }
 
-#passportTable {
-    display: none;
-}
+/*#passportTable {*/
+/*    display: none;*/
+/*}*/
 
 #out {
     float: left;

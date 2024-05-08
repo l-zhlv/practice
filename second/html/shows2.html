@@ -106,44 +106,46 @@
 </div>
 </div>
 
-<div id="out2" class="table" style="display: none;">
-    <table id="passportTable">
-        <thead>
-        <tr>
-            <th>Номер паспорта:</th>
-            <th>Цех:</th>
-            <th>Год:</th>
-            <th>Количество деталей:</th>
-            <th>Количество заготовок:</th>
-            <th>Количество образцов:</th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-</div>
-
 <div id="out" class="table">
     <table id="nomTable">
         <thead>
-        <tr>
-            <th>Обозначение:</th>
-            <th>Наименование:</th>
-            <th>Номер заказа:</th>
-            <th>Количество деталей:</th>
-            <th>Количество заготовок:</th>
-            <th>Количество образцов:</th>
-        </tr>
+            <tr>
+                <th>Обозначение:</th>
+                <th>Наименование:</th>
+                <th>Номер заказа:</th>
+                <th>Количество деталей:</th>
+                <th>Количество заготовок:</th>
+                <th>Количество образцов:</th>
+            </tr>
         </thead>
         <tbody>
+            <tr>
+                <td colspan="6">
+                    <table id="passportTable" class="inner-table">
+                        <thead>
+                            <tr>
+                                <th>Номер паспорта:</th>
+                                <th>Цех:</th>
+                                <th>Год:</th>
+                                <th>Количество деталей:</th>
+                                <th>Количество заготовок:</th>
+                                <th>Количество образцов:</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Здесь будут строки таблицы passportTable -->
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <!-- Здесь будут строки таблицы nomTable -->
         </tbody>
     </table>
 </div>
 
+    <script src="../js/nom.js">
 
-<script src="../js/nom.js">
 
-
-</script>
+    </script>
 </body>
 </html>
