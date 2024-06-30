@@ -56,9 +56,7 @@ function displayFilteredData(data) {
 
     data.forEach(waybill => {
         let row = document.createElement('tr');
-        // Здесь формируем HTML-разметку для каждой строки таблицы и добавляем ее в tableBody
-        // Пример:
-        // row.innerHTML = `<td>${waybill.someProperty}</td><td>${waybill.anotherProperty}</td>...`;
+
         tableBody.appendChild(row);
     });
 
@@ -75,35 +73,47 @@ function searchTable() {
 
 document.querySelector('input[name="s"]').addEventListener('input', searchTable); // Получение введенной информации
 
+
+// Получаем заголовки столбцов
+let headers = waybillTable.querySelectorAll('th');
+
+// Добавляем обработчик для каждого заголовка
+headers.forEach((header, index) => {
+    header.addEventListener('click', () => {
+        let type = header.dataset.type; // Получаем тип данных столбца (например, 'number' или 'string')
+        sortTable(index, type); // Вызываем функцию сортировки, передавая номер столбца и тип данных
+    });
+});
 //функция для сортировки
-let sortOrder = ''; // Переменная для отслеживания порядка сортировки
+let sortOrder = {}; // Объект для отслеживания порядка сортировки по каждому столбцу
 
 function sortTable(colNum, type) {
     let tbody = waybillTable.querySelector('tbody');
     let rowsArray = Array.from(tbody.rows);
     let compare;
 
+
     // Определение типа сортировки
     if (type === 'number' && colNum > 0) {
         compare = function (row1, row2) {
             return parseInt(row1.cells[colNum].innerText) - parseInt(row2.cells[colNum].innerText);
         };
+    } else if (type === 'date' && colNum > 0) {
+        compare = function (row1, row2) {
+            return new Date(row1.cells[colNum].innerText) - new Date(row2.cells[colNum].innerText);
+        };
     } else {
         compare = function (row1, row2) {
-            return row1.cells[colNum].innerText.localeCompare(row2.cells[colNum].innerText);
+            return row1.cells[colNum].innerText.localeCompare(row2.cells[colNum].innerText, undefined, {numeric: true});
         };
     }
 
-    // Проверка текущего порядка сортировки и применение соответствующего действия
-    if (sortOrder === 'asc') {
+    if (!sortOrder[colNum] || sortOrder[colNum] === 'desc') {
         rowsArray.sort(compare);
-        sortOrder = 'desc'; // Изменение порядка на убывающий
-    } else if (sortOrder === 'desc') {
-        rowsArray.reverse(); // Возвращение в изначальный порядок
-        sortOrder = ''; // Сброс порядка сортировки
+        sortOrder[colNum] = 'asc'; // Изменение порядка на возрастающий
     } else {
-        rowsArray.sort(compare);
-        sortOrder = 'asc'; // Изменение порядка на возрастающий
+        rowsArray.reverse(); // Изменение порядка на убывающий
+        sortOrder[colNum] = 'desc'; // Изменение порядка на убывающий
     }
 
     // Обновление содержимого таблицы
@@ -251,8 +261,8 @@ fetch('../json/waybill.json') //подключение файла с инфор�
 
 //функция для получения ID и номера номенклатуры
 function sendId(id, waybillNumDepDate, waybillDateSend, waybillDepFrom, waybillSender, waybillGetDate, waybillDepTo, waybillReceiver) {
-    //const queryString = Object.keys(rowData).map(key => `${key}=${rowData[key]}`).join('&');
-    window.location.href = `../html/shows2.html?id=${id}&waybillNumDepDate=${waybillNumDepDate}&waybillDateSend=${waybillDateSend}&waybillDepFrom=${waybillDepFrom}&waybillSender=${waybillSender}&waybillGetDate=${waybillGetDate}&waybillDepTo=${waybillDepTo}&waybillReceiver=${waybillReceiver}`;
+    const queryString = `id=${id}&waybillNumDepDate=${waybillNumDepDate}&waybillDateSend=${waybillDateSend}&waybillDepFrom=${waybillDepFrom}&waybillSender=${waybillSender}&waybillGetDate=${waybillGetDate}&waybillDepTo=${waybillDepTo}&waybillReceiver=${waybillReceiver}`;
+    window.location.href = `../html/shows2.html?${queryString}`;
 }
 
 
@@ -278,6 +288,56 @@ window.onclick = function (event) {
     }
 }
 
+//для создания накладной
+document.addEventListener('DOMContentLoaded', function () {
+    const openModalBtn = document.getElementById('openModalBtn');
+    const modal = document.getElementById('addWaybillModal');
+    const span = document.getElementsByClassName('close')[0];
 
+    openModalBtn.onclick = function () {
+        modal.style.display = 'block';
+    }
 
+    span.onclick = function () {
+        modal.style.display = 'none';
+    }
+
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    document.getElementById('saveWaybillBtn').onclick = function (event) {
+        event.preventDefault();
+        const waybillData = JSON.parse(localStorage.getItem('waybillData')) || [];
+        const newWaybill = {
+            waybillID: Number(document.getElementById('waybillID').value),
+            waybillNum: Number(document.getElementById('waybillNum').value),
+            waybillDep: Number(document.getElementById('waybillDep').value),
+            waybillDate: new Date().toISOString(),
+            waybillDepFrom: Number(document.getElementById('waybillDepFrom').value),
+            waybillDepTo: Number(document.getElementById('waybillDep').value),
+            waybillSendDate: 0,
+            waybillReceiveDate: 0,
+            waybillSender: '',
+            waybillReceiver: ''
+        };
+
+        waybillData.push(newWaybill);
+        localStorage.setItem('waybillData', JSON.stringify(waybillData));
+
+        const blob = new Blob([JSON.stringify(waybillData, null, 2)], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'waybill.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        modal.style.display = 'none';
+    }
+});
 

@@ -72,44 +72,35 @@ fetch('../json/passport.json')
 
 document.getElementById('nomTable').addEventListener('click', function (event) {
     const secondTable = document.getElementById('passportTable');
-    const tableBody = document.querySelector('#nomTable tbody');
+    const tableBody = document.querySelector('#passportTable tbody');
 
     if (event.target.tagName === 'TD') {
         const currentRow = event.target.closest('tr');
+        const waybillID = currentRow.querySelector('td:first-child').textContent;
 
-        if (currentRow.nextSibling === secondTable) {
-            secondTable.style.display = 'none';
-            document.querySelector('#passportTable tbody').innerHTML = '';
-        } else {
-            if (document.querySelector('#passportTable tbody').innerHTML !== '') {
-                document.querySelector('#passportTable tbody').innerHTML = '';
-                secondTable.style.display = 'none';
-            }
-
-            let waybillID = currentRow.querySelector('td:first-child').textContent;
+        if (secondTable.classList.contains('hidden')) {
+            secondTable.classList.remove('hidden');
+            secondTable.classList.add('full-width');
+            tableBody.innerHTML = '';
 
             fetch('../json/passport.json')
                 .then(response => response.json())
                 .then(data => {
                     let needData = data.filter(passport => passport.waybillID == waybillID);
-
                     needData.forEach(passport => {
                         let row = document.createElement('tr');
-
                         Object.values(passport).forEach(value => {
                             let cell = document.createElement('td');
                             cell.textContent = value;
                             row.appendChild(cell);
                         });
-
-                        document.querySelector('#passportTable tbody').appendChild(row);
+                        tableBody.appendChild(row);
                     });
-
-                    // После построения второй таблицы, показываем ее и вставляем под текущую строку
-                    secondTable.style.display = 'table';
-                    const insertIndex = Array.from(currentRow.parentNode.children).indexOf(currentRow) + 1;
-                    currentRow.parentNode.insertBefore(secondTable, currentRow.parentNode.children[insertIndex]);
                 });
+        } else {
+            secondTable.classList.add('hidden');
+            secondTable.classList.remove('full-width');
+            tableBody.innerHTML = '';
         }
     }
 });
@@ -210,14 +201,16 @@ function GetPassportWaybillID() {
 }
 
 document.querySelectorAll("#nomTable tr").forEach(row => {
-    row.addEventListener('click', function() {
+    row.addEventListener('click', function () {
         document.querySelector("#passportTable").classList.toggle('full-width');
     });
 });
+
 document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('modal');
     const closeButton = document.querySelector('.close');
     const saveButton = document.getElementById('saveChanges');
+    const confirmDeleteButton = document.getElementById('confirmDeleteBtn'); // Кнопка "Подтвердить удаление"
 
     // Открыть модальное окно при клике на кнопку "Редактировать накладную"
     document.getElementById('edit-button').addEventListener('click', function () {
@@ -280,60 +273,251 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Закрыть модальное окно
         modal.style.display = 'none';
+
+        // Сохранение изменений в JSON файле
+        fetch('../json/waybill.json')
+            .then(response => response.json())
+            .then(data => {
+                // Найти запись по уникальному идентификатору и обновить её
+                const idToUpdate = 1051762; // Пример идентификатора
+                const updatedEntry = data.find(entry => entry.waybillID === idToUpdate);
+                if (updatedEntry) {
+                    updatedEntry.waybillNumDepDate = waybillNumDepDate;
+                    updatedEntry.waybillSenDate = waybillSenDate;
+                    updatedEntry.waybillDepsFrom = waybillDepsFrom;
+                    updatedEntry.waybillSending = waybillSending;
+                    updatedEntry.waybillRecDate = waybillRecDate;
+                    updatedEntry.waybillDeppTo = waybillDeppTo;
+                    updatedEntry.waybillReceiver = waybillReceiver;
+
+                    // Сохранить обновленные данные обратно в файл
+                    const updatedData = JSON.stringify(data, null, 2);
+                    const blob = new Blob([updatedData], {type: 'application/json'});
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'waybill.json';
+                    a.click();
+                }
+            });
     });
+
 });
-function deleteWaybillByID(waybillID) {
-    let waybillData = JSON.parse(localStorage.getItem('waybillData'));
-    let nomenclatureData = JSON.parse(localStorage.getItem('nomenclatureData'));
-    let passportData = JSON.parse(localStorage.getItem('passportData'));
-
-    // Удаление записей с соответствующим waybillID из waybillData
-    waybillData = waybillData.filter(item => item.waybillID !== waybillID);
-    localStorage.setItem('waybillData', JSON.stringify(waybillData));
-
-    // Удаление записей с соответствующим waybillID из nomenclatureData
-    nomenclatureData = nomenclatureData.filter(item => item.waybillID !== waybillID);
-    localStorage.setItem('nomenclatureData', JSON.stringify(nomenclatureData));
-
-    // Удаление записей с соответствующим waybillID из passportData
-    passportData = passportData.filter(item => item.waybillID !== waybillID);
-    localStorage.setItem('passportData', JSON.stringify(passportData));
 
 
-    // Перенаправление на предыдущую страницу
-    history.back();
+document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const waybillIDToDelete = urlParams.get('id');
+
+    deleteWaybillByID(waybillIDToDelete);
+
+    document.getElementById('myModal').style.display = 'none';
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const addPassportBtn = document.getElementById('addPassportBtn');
+    const modal = document.getElementById('addPassportModal');
+    const span = document.getElementsByClassName('close')[0];
+    const params = new URLSearchParams(window.location.search);
+
+    const waybillID = params.get('id');
+    const waybillNumDepDate = params.get('waybillNumDepDate');
+    const waybillDateSend = params.get('waybillDateSend');
+    const waybillDepFrom = params.get('waybillDepFrom');
+    const waybillSender = params.get('waybillSender');
+    const waybillGetDate = params.get('waybillGetDate');
+    const waybillDepTo = params.get('waybillDepTo');
+    const waybillReceiver = params.get('waybillReceiver');
+
+    // Открытие модального окна и установка ID накладной
+    addPassportBtn.onclick = function () {
+        document.getElementById('waybillID').value = waybillID || ''; // Если waybillID отсутствует, установите пустую строку
+        modal.style.display = 'block';
+    }
+
+    // Закрытие модального окна
+    span.onclick = function () {
+        modal.style.display = 'none';
+    }
+
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // Сохранение данных
+    document.getElementById('savePassportBtn').onclick = function () {
+        const passportData = JSON.parse(localStorage.getItem('passportData')) || [];
+        const newPassport = {
+            waybillID: Number(document.getElementById('waybillID').value),
+            passportID: Number(document.getElementById('passportID').value),
+            nomenclatureID: Number(document.getElementById('nomenclatureID').value),
+            passportNum: Number(document.getElementById('passportNum').value),
+            passportDep: Number(document.getElementById('passportDep').value),
+            passportYear: Number(document.getElementById('passportYear').value),
+            quantityDetails: Number(document.getElementById('quantityDetails').value),
+            quantityWorkpieces: Number(document.getElementById('quantityWorkpieces').value),
+            quantitySamples: Number(document.getElementById('quantitySamples').value)
+        };
+
+        passportData.push(newPassport);
+        localStorage.setItem('passportData', JSON.stringify(passportData));
+        downloadJSON(passportData, 'passport.json');
+        modal.style.display = 'none';
+    }
+});
+
+function downloadJSON(data, filename) {
+    const file = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const a = document.createElement('a');
+    const url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }, 0);
 }
 
-document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+
+const deleteWaybillBtn = document.getElementById('deleteButton');
+
+deleteWaybillBtn.onclick = function () {
     const urlParams = new URLSearchParams(window.location.search);
-    const waybillIDToDelete = urlParams.get('id');
+    const id = urlParams.get('id');
 
-    deleteWaybillByID(waybillIDToDelete);
+    let waybillData = JSON.parse(localStorage.getItem('waybillData')) || [];
 
-    document.getElementById('myModal').style.display = 'none';
+    // Находим индекс накладной по ID
+    const waybillIndex = waybillData.findIndex(w => w.waybillID == id);
+
+    if (waybillIndex !== -1) {
+        // Удаляем накладную из массива по индексу
+        waybillData.splice(waybillIndex, 1);
+
+        localStorage.setItem('waybillData', JSON.stringify(waybillData));
+
+        const blob = new Blob([JSON.stringify(waybillData, null, 2)], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'waybill.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+};
+
+
+//отправить накладную
+document.addEventListener('DOMContentLoaded', function () {
+    const sendWaybillBtn = document.getElementById('sendWaybillBtn');
+    const senderModal = document.getElementById('SenderModal');
+    const closeSenderModal = document.getElementsByClassName('close')[1];
+
+    sendWaybillBtn.onclick = function () {
+        senderModal.style.display = 'block';
+    }
+
+    closeSenderModal.onclick = function () {
+        senderModal.style.display = 'none';
+    }
+
+    window.onclick = function (event) {
+        if (event.target == senderModal) {
+            senderModal.style.display = 'none';
+        }
+    }
+
+    const saveSenderBtn = document.getElementById('saveSenderBtn');
+
+    saveSenderBtn.onclick = function () {
+        const senderName = document.getElementById('senderName').value;
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+
+        const waybillData = JSON.parse(localStorage.getItem('waybillData')) || [];
+        const waybill = waybillData.find(w => w.waybillID == id);
+
+        if (waybill) {
+            waybill.waybillSender = senderName;
+
+            // Добавляем текущее время отправления в формате ISO
+            const currentDate = new Date().toISOString();
+            waybill.waybillSendDate = currentDate;
+
+            localStorage.setItem('waybillData', JSON.stringify(waybillData));
+
+            const blob = new Blob([JSON.stringify(waybillData, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'waybill.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        senderModal.style.display = 'none';
+    }
 });
 
-// Обработчик события нажатия на кнопку "Удалить накладную"
-document.getElementById('deleteButton').addEventListener('click', function () {
-    // Показать модальное окно подтверждения удаления
-    document.getElementById('myModal').style.display = 'block';
-});
+//Получить накладную
+document.addEventListener('DOMContentLoaded', function () {
+    const getWaybillBtn = document.getElementById('getWaybillBtn');
+    const receiverModal = document.getElementById('receiverModal');
+    const closeModal = document.getElementsByClassName('close')[0];
 
-// Обработчик события нажатия на кнопку "Отмена" в модальном окне
-document.getElementById('cancelDeleteBtn').addEventListener('click', function () {
-    // Скрыть модальное окно
-    document.getElementById('myModal').style.display = 'none';
-});
+    getWaybillBtn.onclick = function () {
+        receiverModal.style.display = 'block';
+    }
 
-// Обработчик события нажатия на кнопку "Подтвердить удаление" в модальном окне
-document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
-    // Получаем ID накладной из параметров URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const waybillIDToDelete = urlParams.get('id');
+    closeModal.onclick = function () {
+        receiverModal.style.display = 'none';
+    }
 
-    // Вызываем функцию удаления накладной по ID
-    deleteWaybillByID(waybillIDToDelete);
+    window.onclick = function (event) {
+        if (event.target == receiverModal) {
+            receiverModal.style.display = 'none';
+        }
+    }
 
-    // Скрыть модальное окно после удаления
-    document.getElementById('myModal').style.display = 'none';
+    const saveReceiverBtn = document.getElementById('saveReceiverBtn');
+
+    saveReceiverBtn.onclick = function () {
+        const receiverName = document.getElementById('receiverName').value;
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+
+        const waybillData = JSON.parse(localStorage.getItem('waybillData')) || [];
+        const waybill = waybillData.find(w => w.waybillID == id);
+
+        if (waybill) {
+            waybill.waybillReceiver = receiverName;
+
+            // Добавляем текущее время до секунд в формате ISO
+            const currentDate = new Date().toISOString();
+            waybill.waybillReceiveDate = currentDate;
+
+            localStorage.setItem('waybillData', JSON.stringify(waybillData));
+
+            const blob = new Blob([JSON.stringify(waybillData, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'waybill.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        receiverModal.style.display = 'none';
+    }
 });

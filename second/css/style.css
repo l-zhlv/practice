@@ -105,7 +105,7 @@ button:hover {
 }
 
 /*.pagination:hover {*/
-/*    background-color: #a8eef7d7; !* светло-розовый *!*/
+/* background-color: #a8eef7d7; !* светло-розовый *!*/
 /*}*/
 
 header {
@@ -168,7 +168,6 @@ input {
     overflow-x: auto;
     max-height: 400px; /* Максимальная высота контейнера */
 }
-
 
 
 /* Стили для таблицы */
@@ -294,5 +293,3 @@ th, td {
     overflow-x: auto;
     white-space: nowrap;
 }
-
-
