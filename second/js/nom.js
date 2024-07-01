@@ -91,7 +91,9 @@ document.getElementById('nomTable').addEventListener('click', function (event) {
                         let row = document.createElement('tr');
                         Object.values(passport).forEach(value => {
                             let cell = document.createElement('td');
-                            cell.textContent = value;
+                            if (value !== 0) {
+                                cell.textContent = value;
+                            }
                             row.appendChild(cell);
                         });
                         tableBody.appendChild(row);
@@ -150,7 +152,9 @@ function GetNomenclatureWaybillID() {
                     for (let item in nomenclature) {
                         if (Object.prototype.hasOwnProperty.call(nomenclature, item) && item !== 'waybillID' && item !== 'nomenclatureID') {
                             let cell = document.createElement('td');
-                            cell.textContent = nomenclature[item];
+                            if (nomenclature[item] !== 0) {
+                                cell.textContent = nomenclature[item];
+                            }
                             row.appendChild(cell);
                         }
                     }
@@ -183,13 +187,14 @@ function GetPassportWaybillID() {
             .then(data => {
                 let needData = data.filter(passport => passport.waybillID == waybillID);
                 needData.forEach(passport => {
-
                     let row = document.createElement('tr');
 
                     for (let item in passport) {
                         if (Object.prototype.hasOwnProperty.call(passport, item) && item !== 'waybillID' && item !== 'passportID' && item !== 'nomenclatureID') {
                             let cell = document.createElement('td');
-                            cell.textContent = passport[item];
+                            if (passport[item] !== 0) {
+                                cell.textContent = passport[item];
+                            }
                             row.appendChild(cell);
                         }
                     }
@@ -200,11 +205,37 @@ function GetPassportWaybillID() {
     });
 }
 
-document.querySelectorAll("#nomTable tr").forEach(row => {
-    row.addEventListener('click', function () {
-        document.querySelector("#passportTable").classList.toggle('full-width');
+document.addEventListener('DOMContentLoaded', function () {
+    var lastClickedRow = null;
+
+    var rows = document.querySelectorAll('#nomTable tr');
+    if (rows.length === 0) {
+        console.error('No rows found in #nomTable');
+        return;
+    }
+
+    var passportTable = document.getElementById('passportTable');
+    if (!passportTable) {
+        console.error('No element with id #passportTable found');
+        return;
+    }
+
+    rows.forEach(function (row) {
+        row.addEventListener('click', function () {
+            if (lastClickedRow === row) {
+                // Если кликнули на ту же строку, переключаем видимость таблицы
+                passportTable.classList.toggle('hidden');
+            } else {
+                // Если кликнули на другую строку, показываем таблицу
+                passportTable.classList.remove('hidden');
+            }
+
+            // Обновляем последнюю кликнутую строку
+            lastClickedRow = row;
+        });
     });
 });
+
 
 document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('modal');

@@ -170,64 +170,16 @@ input {
 }
 
 
-/* Стили для таблицы */
-#waybillTable {
-    border-collapse: collapse;
-    width: 100%; /* Ширина таблицы равна ширине контейнера */
-}
-
-/* Стили для фиксированного заголовка */
-#waybillTable thead {
-    position: sticky;
-    top: 0;
-    background-color: #e9ccedd7; /* Цвет фона для заголовка */
-    z-index: 1;
-}
-
-#waybillTable th, #waybillTable td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: center;
-}
-
-#waybillTable tbody tr {
-    display: table-row;
-}
-
-#passportTable {
-    border-collapse: collapse;
-}
-
-#passportTable th, #passportTable td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: center;
-}
-
-#nomTable {
-    border-collapse: collapse;
-}
-
-#nomTable th, #nomTable td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: center;
-}
-
-Button {
-    background-color: #d4f5ffd7; /* светло-розовый */
-    color: black;
-    border: 3px solid #59d3e3d7; /* темно-розовый */
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 30px;
-
-}
-
-
 body {
-    background-color: #f2dcf2d7;
+
+    background-color: #f2f2f2;
+    font-family: Arial, sans-serif;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    white-space: nowrap;
+    margin-bottom: 20px;
 }
 
 table {
@@ -238,58 +190,54 @@ table {
     border: 2px solid black;
     border-spacing: 0;
     border-collapse: separate;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 10px;
     border-radius: 5px;
     color: black;
-    font-family: Arial;
     background-color: #fadefcd7;
     table-layout: fixed;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 table th, table td {
-    border: 2px solid black;
-    padding: 10px;
-    word-break: break-all; /* Добавлено для автоматического переноса слов */
-    white-space: normal; /* Добавлено для подстраивания ширины колонок */
+    border: 1px solid #858181;
+    padding: 12px;
+    text-align: center;
+    word-break: break-word;
+    white-space: normal;
 }
 
 table th {
-    padding-top: 9px;
     font-weight: bold;
-    vertical-align: middle;
+    background-color: #e9ccedd7;
     color: black;
 }
 
-table td {
-    vertical-align: top;
-    border-top: 1px solid #ddd;
+table tbody tr:hover {
+    background-color: #f19ef1;
+      cursor: pointer;
 }
 
-table th + th, table td + td, table th + td {
-    border-left: 1px solid #ddd;
+#nomTable {
+    border-collapse: collapse;
 }
 
-tr.content:hover {
-    background-color: #f2d0f1d7;
+#passportTable {
+    border-collapse: collapse;
 }
 
-th {
-    font-weight: bold;
+#passportTable th, #passportTable td,
+#nomTable th, #nomTable td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
 }
 
-td {
-    padding: 10px;
-    line-height: 18px;
-    text-align: left;
-    border: 2px solid black;
+button {
+    background-color: #d4f5ffd7;
+    color: black;
+    border: 3px solid #59d3e3d7;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 30px;
 }
 
-th, td {
-    border-width: 2px;
-}
-
-.table-wrapper {
-    overflow-x: auto;
-    white-space: nowrap;
-}

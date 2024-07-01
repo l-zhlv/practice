@@ -9,6 +9,10 @@ header {
     font-weight: bold;
 }
 
+.full-width {
+    display: block; /* или другое значение, которое делает таблицу видимой */
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -35,6 +39,7 @@ tr:nth-child(even) {
 
 tr:hover {
     background-color: #f2dcf2;
+      cursor: pointer;
 }
 
 .modal {

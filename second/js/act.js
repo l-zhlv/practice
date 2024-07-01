@@ -81,47 +81,62 @@ let headers = waybillTable.querySelectorAll('th');
 headers.forEach((header, index) => {
     header.addEventListener('click', () => {
         let type = header.dataset.type; // Получаем тип данных столбца (например, 'number' или 'string')
-        sortTable(index, type); // Вызываем функцию сортировки, передавая номер столбца и тип данных
+        sortTableByColumn(index, type); // Вызываем функцию сортировки, передавая номер столбца и тип данных
     });
 });
-//функция для сортировки
-let sortOrder = {}; // Объект для отслеживания порядка сортировки по каждому столбцу
 
-function sortTable(colNum, type) {
+let sortOrder = {};
+
+// Функция для сортировки таблицы по столбцу
+function sortTableByColumn(colNum, type) {
     let tbody = waybillTable.querySelector('tbody');
     let rowsArray = Array.from(tbody.rows);
-    let compare;
 
+    if (type !== 'number') {
+        return; // Игнорировать сортировку, если тип не является "number" (для цеха)
 
-    // Определение типа сортировки
-    if (type === 'number' && colNum > 0) {
-        compare = function (row1, row2) {
-            return parseInt(row1.cells[colNum].innerText) - parseInt(row2.cells[colNum].innerText);
-        };
-    } else if (type === 'date' && colNum > 0) {
-        compare = function (row1, row2) {
-            return new Date(row1.cells[colNum].innerText) - new Date(row2.cells[colNum].innerText);
-        };
-    } else {
-        compare = function (row1, row2) {
-            return row1.cells[colNum].innerText.localeCompare(row2.cells[colNum].innerText, undefined, {numeric: true});
-        };
     }
 
+// Выбор функции сортировки в зависимости от типа данных
+    let compare;
+    if (type === 'number') {
+        compare = compareByNumber;
+    } else {
+        compare = compareByString;
+    }
+
+// Определение порядка сортировки
     if (!sortOrder[colNum] || sortOrder[colNum] === 'desc') {
-        rowsArray.sort(compare);
+        rowsArray.sort((row1, row2) => compare(row1, row2, colNum));
         sortOrder[colNum] = 'asc'; // Изменение порядка на возрастающий
     } else {
         rowsArray.reverse(); // Изменение порядка на убывающий
         sortOrder[colNum] = 'desc'; // Изменение порядка на убывающий
     }
 
-    // Обновление содержимого таблицы
+// Обновление содержимого таблицы
     tbody.innerHTML = '';
-    rowsArray.forEach(function (row) {
-        tbody.appendChild(row);
-    });
+    rowsArray.forEach(row => tbody.appendChild(row));
 }
+
+// Функция для сравнения чисел
+function compareByNumber(row1, row2, colNum) {
+    return parseInt(row1.cells[colNum].innerText) - parseInt(row2.cells[colNum].innerText);
+}
+
+// Функция для сравнения строк
+function compareByString(row1, row2, colNum) {
+    return row1.cells[colNum].innerText.localeCompare(row2.cells[colNum].innerText, undefined, {numeric: true});
+}
+
+// Добавление обработчиков событий на заголовки столбцов
+document.querySelectorAll('.sortable').forEach((th, index) => {
+    if (th.innerText === 'Цех') { // Добавьте проверку на текст заголовка 'Цех'
+        th.addEventListener('click', () => {
+            sortTableByColumn(index + 1, th.getAttribute('data-type'));
+        });
+    }
+});
 
 fetch('../json/waybill.json') //подключение файла с информацией
     .then(response => response.json()) //обрабатываем ответ на запрос и снова преобразуем в формат json
