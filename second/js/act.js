@@ -1,14 +1,45 @@
-//форматирование даты и времени для столбцов отправления и получения
+//Объявление структур для дальнейшего использования
+// Структура для хранения информации о сортировке по возрастанию и убыванию
+//структуры не спасли. сортировка цехов теперь через пень, зато полностью слетела сортировка по номеру :"")
+const SortOrder = {
+    asc: 'asc',
+    desc: 'desc'
+};
+
+// Структура для хранения информации о столбце (для цеха)
+const TableColumn = {
+    index: 0,
+    type: 'number' //
+};
+
+// Структура для хранения данных о сортировке для каждого столбца
+const ColumnSortState = {
+    [TableColumn.index]: SortOrder.asc // Начальное состояние сортировки для первого столбца
+};
+
+// Структура для хранения информации о дате и времени
+const DateTime = {
+    day: 0,
+    month: 0,
+    year: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+};
+
+// Форматирование даты и времени для столбцов отправления и получения
 function GetDateAndTime(dateTimeString) {
-    var date = new Date(dateTimeString); //Преобразование строки в формат даты и времени
-    var day = date.getDate(); // получение дня из объекта даты
-    var month = date.getMonth() + 1;  //получение месяца
-    var year = date.getFullYear(); //получение года
-    var hours = date.getHours(); //получение часа
-    var minutes = date.getMinutes(); //получение минут
-    var seconds = date.getSeconds(); //получение секунд
-    return `${day < 10 ? '0' + day : day}.${month < 10 ? '0' + month : month}.${year} 
-    ${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`; //корректный вывод даты и времени в нужном формате
+    const date = new Date(dateTimeString); // Преобразование строки в формат даты и времени
+    const dateTime = {
+        day: date.getDate(),
+        month: date.getMonth() + 1,
+        year: date.getFullYear(),
+        hours: date.getHours(),
+        minutes: date.getMinutes(),
+        seconds: date.getSeconds()
+    };
+    return `${dateTime.day < 10 ? '0' + dateTime.day : dateTime.day}.${dateTime.month < 10 ? '0' + dateTime.month : dateTime.month}.${dateTime.year} 
+    ${dateTime.hours < 10 ? '0' + dateTime.hours : dateTime.hours}:${dateTime.minutes < 10 ? '0' + dateTime.minutes : dateTime.minutes}:${dateTime.seconds < 10 ? '0' + dateTime.seconds : dateTime.seconds}`;
 }
 
 //форматирование даты и времени для столбца "номер накладной"
@@ -20,7 +51,6 @@ function GetDate(dateTimeString) {
     return `${day < 10 ? '0' + day : day}${month < 10 ? '0' + month : month}${year}`; //вывод данных в нужной форме
 }
 
-var selected_row = null;
 
 function select_row(row) {
     row.parentNode.querySelectorAll('tr').forEach(row => row.classList.remove('selected')); // Удаляем класс 'selected' у всех строк
@@ -28,36 +58,107 @@ function select_row(row) {
 }
 
 function searchInJSON(searchValue) {
+    // Загружаем JSON-файл с данными о накладных
     fetch('../json/waybill.json')
         .then(response => response.json())
         .then(data => {
+            // Фильтруем данные, оставляя только записи, содержащие искомую строку
             const filteredData = data.filter(item => {
-                // Преобразуем все свойства объекта в нижний регистр для удобства сравнения
+                // Структура для хранения свойств объекта в нижнем регистре
                 const lowerCaseItem = Object.keys(item).reduce((acc, key) => {
+                    // Преобразование в нижний регистр
                     acc[key] = typeof item[key] === 'string' ? item[key].toLowerCase() : item[key];
                     return acc;
                 }, {});
 
-                // Проверяем, есть ли в свойствах объекта значение, содержащее искомую строку
+                // Проверка на наличие искомой строки
                 return Object.values(lowerCaseItem).some(value => typeof value === 'string' && value.includes(searchValue.toLowerCase()));
             });
 
-            // Отображаем отфильтрованные записи на странице
+            // Отображение отфильтрованных записей на странице
             displayFilteredData(filteredData);
         })
         .catch(error => {
+            // Выводим ошибку, если произошла ошибка при получении данных
             console.error('Error fetching data:', error);
         });
 }
 
+//функция для отображения данных с учетом поиска
 function displayFilteredData(data) {
     const tableBody = document.querySelector('#waybillTable tbody');
     tableBody.innerHTML = ''; // Очищаем содержимое таблицы
 
     data.forEach(waybill => {
-        let row = document.createElement('tr');
+        const row = {
+            element: document.createElement('tr'),
+            firstColumn: document.createElement('td'),
+            sendDate: document.createElement('td'),
+            depFrom: document.createElement('td'),
+            sender: document.createElement('td'),
+            receiveDate: document.createElement('td'),
+            depTo: document.createElement('td'),
+            receiver: document.createElement('td')
+        };
 
-        tableBody.appendChild(row);
+        // Настройка строки
+        row.element.classList.add("content");
+        row.element.setAttribute('id', waybill.waybillID);
+
+        // Обработчик клика по строке
+        row.element.addEventListener('click', function () {
+            select_row(row.firstColumn); // Выделение строки
+            sendId(
+                row.element.id,
+                `${waybill.waybillNum}/${waybill.waybillDep} ${GetDate(waybill.waybillDate)}`,
+                GetDateAndTime(waybill.waybillSendDate),
+                waybill.waybillDepFrom,
+                waybill.waybillSender,
+                GetDateAndTime(waybill.waybillReceiveDate),
+                waybill.waybillDepTo,
+                waybill.waybillReceiver
+            );
+        });
+
+        // Настройка первой колонки
+        row.firstColumn.addEventListener('click', () => select_row(row.firstColumn));
+        row.firstColumn.style.textAlign = "right";
+        row.firstColumn.innerHTML = `${waybill.waybillNum}/${waybill.waybillDep} ${GetDate(waybill.waybillDate)}`;
+        row.element.appendChild(row.firstColumn);
+
+        // Настройка колонки с датой отправки
+        row.sendDate.innerText = GetDateAndTime(waybill.waybillSendDate);
+        row.sendDate.style.textAlign = "left";
+        row.element.appendChild(row.sendDate);
+
+        // Настройка колонки с отделением отправления
+        row.depFrom.innerText = waybill.waybillDepFrom;
+        row.depFrom.style.textAlign = "right";
+        row.element.appendChild(row.depFrom);
+
+        // Настройка колонки с отправителем
+        row.sender.innerText = waybill.waybillSender;
+        row.sender.style.textAlign = "left";
+        row.element.appendChild(row.sender);
+
+        // Настройка колонки с датой получения
+        row.receiveDate.innerText = GetDateAndTime(waybill.waybillReceiveDate);
+        row.receiveDate.style.textAlign = "left";
+        row.element.appendChild(row.receiveDate);
+
+        // Настройка колонки с отделением назначения
+        row.depTo.dataset.value = waybill.waybillDepTo;
+        row.depTo.innerText = waybill.waybillDepTo;
+        row.depTo.style.textAlign = "right";
+        row.element.appendChild(row.depTo);
+
+        // Настройка колонки с получателем
+        row.receiver.innerText = waybill.waybillReceiver;
+        row.receiver.style.textAlign = "left";
+        row.element.appendChild(row.receiver);
+
+        // Добавляем строку в таблицу
+        tableBody.appendChild(row.element);
     });
 
     // Пересчитываем пагинацию
@@ -74,68 +175,58 @@ function searchTable() {
 document.querySelector('input[name="s"]').addEventListener('input', searchTable); // Получение введенной информации
 
 
-// Получаем заголовки столбцов
-let headers = waybillTable.querySelectorAll('th');
+// Функция сравнения чисел
+function compareByNumber(row1, row2, column) {
+    return parseInt(row1.cells[column.index].innerText) - parseInt(row2.cells[column.index].innerText);
+}
 
-// Добавляем обработчик для каждого заголовка
-headers.forEach((header, index) => {
-    header.addEventListener('click', () => {
-        let type = header.dataset.type; // Получаем тип данных столбца (например, 'number' или 'string')
-        sortTableByColumn(index, type); // Вызываем функцию сортировки, передавая номер столбца и тип данных
-    });
-});
+// Функция сравнения строк
+function compareByString(row1, row2, column) {
+    return row1.cells[column.index].innerText.localeCompare(row2.cells[column.index].innerText, undefined, {numeric: true});
+}
 
-let sortOrder = {};
+// Функция сортировки таблицы по столбцу
+function sortTableByColumn(column, order) {
+    const tbody = waybillTable.querySelector('tbody');
+    const rowsArray = Array.from(tbody.rows);
 
-// Функция для сортировки таблицы по столбцу
-function sortTableByColumn(colNum, type) {
-    let tbody = waybillTable.querySelector('tbody');
-    let rowsArray = Array.from(tbody.rows);
+    let compareFunction;
 
-    if (type !== 'number') {
-        return; // Игнорировать сортировку, если тип не является "number" (для цеха)
-
+    switch (column.type) {
+        case 'number':
+            compareFunction = compareByNumber;
+            break;
+        case 'string':
+            compareFunction = compareByString;
+            break;
+        default:
+            return; // Игнорировать сортировку, если тип не поддерживается
     }
 
-// Выбор функции сортировки в зависимости от типа данных
-    let compare;
-    if (type === 'number') {
-        compare = compareByNumber;
+    if (order === SortOrder.desc) {
+        rowsArray.sort((row1, row2) => compareFunction(row1, row2, column));
+        ColumnSortState[column.index] = SortOrder.asc;
     } else {
-        compare = compareByString;
+        rowsArray.reverse();
+        ColumnSortState[column.index] = SortOrder.desc;
     }
 
-// Определение порядка сортировки
-    if (!sortOrder[colNum] || sortOrder[colNum] === 'desc') {
-        rowsArray.sort((row1, row2) => compare(row1, row2, colNum));
-        sortOrder[colNum] = 'asc'; // Изменение порядка на возрастающий
-    } else {
-        rowsArray.reverse(); // Изменение порядка на убывающий
-        sortOrder[colNum] = 'desc'; // Изменение порядка на убывающий
-    }
-
-// Обновление содержимого таблицы
     tbody.innerHTML = '';
     rowsArray.forEach(row => tbody.appendChild(row));
 }
 
-// Функция для сравнения чисел
-function compareByNumber(row1, row2, colNum) {
-    return parseInt(row1.cells[colNum].innerText) - parseInt(row2.cells[colNum].innerText);
-}
+// Получаем все заголовки таблицы
+const headers = waybillTable.querySelectorAll('th');
 
-// Функция для сравнения строк
-function compareByString(row1, row2, colNum) {
-    return row1.cells[colNum].innerText.localeCompare(row2.cells[colNum].innerText, undefined, {numeric: true});
-}
-
-// Добавление обработчиков событий на заголовки столбцов
-document.querySelectorAll('.sortable').forEach((th, index) => {
-    if (th.innerText === 'Цех') { // Добавьте проверку на текст заголовка 'Цех'
-        th.addEventListener('click', () => {
-            sortTableByColumn(index + 1, th.getAttribute('data-type'));
-        });
-    }
+// Добавляем обработчик события для каждого заголовка
+headers.forEach((header, index) => {
+    header.addEventListener('click', () => {
+        const column = {
+            index: index + 1, // Индекс столбца (с учетом индексации с 0)
+            type: header.dataset.type // Тип данных столбца
+        };
+        sortTableByColumn(column, ColumnSortState[column.index]); // Вызываем сортировку, передавая структуру столбца и текущее состояние сортировки
+    });
 });
 
 fetch('../json/waybill.json') //подключение файла с информацией
@@ -281,51 +372,39 @@ function sendId(id, waybillNumDepDate, waybillDateSend, waybillDepFrom, waybillS
 }
 
 
-const modal = document.getElementById('modal');
-const openModalBtn = document.getElementById('openModalBtn');
-const closeBtn = document.getElementsByClassName('close')[0];
-const infoForm = document.getElementById('infoForm');
-
-// Открыть модальное окно
-openModalBtn.onclick = function () {
-    modal.style.display = 'block';
-}
-
-// Закрыть модальное окно при клике на крестик
-closeBtn.onclick = function () {
-    modal.style.display = 'none';
-}
-
-// Закрыть модальное окно при клике вне окна
-window.onclick = function (event) {
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-}
-
-//для создания накладной
+// для создания накладной
 document.addEventListener('DOMContentLoaded', function () {
-    const openModalBtn = document.getElementById('openModalBtn');
-    const modal = document.getElementById('addWaybillModal');
-    const span = document.getElementsByClassName('close')[0];
+    const modalElements = { //структура для хранения элементов модального окна
+        openModalBtn: document.getElementById('openModalBtn'), //ссылка на кнопку открытия
+        modal: document.getElementById('addWaybillModal'), //ссылка на само окно
+        span: document.getElementsByClassName('close')[0], //ссылка для закрытия
+        saveWaybillBtn: document.getElementById('saveWaybillBtn') //ссылка на кнопку для сохранения
+    };
 
-    openModalBtn.onclick = function () {
-        modal.style.display = 'block';
+    //обработчик клика для открытия модального окна
+    modalElements.openModalBtn.onclick = function () {
+        modalElements.modal.style.display = 'block';
     }
 
-    span.onclick = function () {
-        modal.style.display = 'none';
+    //обработчик клика для закрытия
+    modalElements.span.onclick = function () {
+        modalElements.modal.style.display = 'none';
     }
 
+    //обработчик для закрытия при клике на любую область вне окна
     window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
+        if (event.target == modalElements.modal) {
+            modalElements.modal.style.display = 'none';
         }
     }
 
-    document.getElementById('saveWaybillBtn').onclick = function (event) {
+    //обработчик клика сохранения
+    modalElements.saveWaybillBtn.onclick = function (event) {
         event.preventDefault();
+        //получаем данные
         const waybillData = JSON.parse(localStorage.getItem('waybillData')) || [];
+
+        //создание нового объекта в накладной
         const newWaybill = {
             waybillID: Number(document.getElementById('waybillID').value),
             waybillNum: Number(document.getElementById('waybillNum').value),
@@ -333,26 +412,31 @@ document.addEventListener('DOMContentLoaded', function () {
             waybillDate: new Date().toISOString(),
             waybillDepFrom: Number(document.getElementById('waybillDepFrom').value),
             waybillDepTo: Number(document.getElementById('waybillDep').value),
-            waybillSendDate: 0,
-            waybillReceiveDate: 0,
+            waybillSendDate: null,
+            waybillReceiveDate: null,
             waybillSender: '',
             waybillReceiver: ''
         };
 
+        //добавить новую накладную в массив и сохранить в localStorage
         waybillData.push(newWaybill);
         localStorage.setItem('waybillData', JSON.stringify(waybillData));
 
+        // Создаем Blob с данными в формате JSON и ссылку для скачинвания нового файла
         const blob = new Blob([JSON.stringify(waybillData, null, 2)], {type: 'application/json'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'waybill.json';
+        a.download = 'waybill.json'; //оставляем имя без изменений для замены
         document.body.appendChild(a);
-        a.click();
+        a.click(); // клик по ссылке
+
+        //удаляем ссылку и временный URL
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
 
-        modal.style.display = 'none';
+        //скрыть модальное окно
+        modalElements.modal.style.display = 'none';
     }
 });
 

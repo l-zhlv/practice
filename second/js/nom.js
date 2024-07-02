@@ -9,61 +9,23 @@ function ClearPassportTable() {
 }
 
 
-// document.addEventListener('DOMContentLoaded', function () {
-//     const modal = document.getElementById('modal');
-//     const editButton = document.getElementById('edit-button');
-//     const closeBtn = document.querySelector('.close');
-//     const waybillDataDiv = document.getElementById('waybillData');
-//
-//     // Открыть модальное окно по нажатию на кнопку
-//     editButton.addEventListener('click', function () {
-//         modal.style.display = 'block';
-//     });
-//
-//     // Закрыть модальное окно при клике на крестик
-//     closeBtn.onclick = function () {
-//         modal.style.display = 'none';
-//     }
-//
-//     // Закрыть модальное окно при клике вне окна
-//     window.onclick = function (event) {
-//         if (event.target == modal) {
-//             modal.style.display = 'none';
-//         }
-//     }
-//
-//
-//     // Формирование HTML с данными из waybill
-//     const waybillHTML = `
-//             <p><strong>Номер накладной и место отправления:</strong> ${waybillNumDepDate}</p>
-//             <p><strong>Дата отправления:</strong> ${waybillDateSend}</p>
-//             <p><strong>Место отправления:</strong> ${waybillDepFrom}</p>
-//             <p><strong>Отправитель:</strong> ${waybillSender}</p>
-//             <p><strong>Дата получения:</strong> ${waybillGetDate}</p>
-//             <p><strong>Место получения:</strong> ${waybillDepTo}</p>
-//             <p><strong>Получатель:</strong> ${waybillReceiver}</p>
-//         `;
-//
-//     // Вставка HTML с данными в модальное окно
-//     waybillDataDiv.innerHTML = waybillHTML;
-// });
+ClearPassportTable(); //очистить таблицу с паспортом
 
-ClearPassportTable();
-// GetPassportWaybillID();
-
-
+// Загрузка данных из waybill.json и сохранение их в локальное хранилище
 fetch('../json/waybill.json')
     .then(response => response.json())
     .then(data => {
-        localStorage.setItem('waybillData', JSON.stringify(data));
+        localStorage.setItem('waybillData', JSON.stringify(data)); // Сохранение JSON-объекта с данными в локальное хранилище под ключом 'waybillData'
     });
 
+// Загрузка данных из nomenclature.json и сохранение их в локальное хранилище
 fetch('../json/nomenclature.json')
     .then(response => response.json())
     .then(data => {
         localStorage.setItem('nomenclatureData', JSON.stringify(data));
     });
 
+// Загрузка данных из passport.json и сохранение их в локальное хранилище
 fetch('../json/passport.json')
     .then(response => response.json())
     .then(data => {
@@ -74,98 +36,149 @@ document.getElementById('nomTable').addEventListener('click', function (event) {
     const secondTable = document.getElementById('passportTable');
     const tableBody = document.querySelector('#passportTable tbody');
 
+    // Проверяем, был ли клик по ячейке таблицы
     if (event.target.tagName === 'TD') {
-        const currentRow = event.target.closest('tr');
-        const waybillID = currentRow.querySelector('td:first-child').textContent;
+        const currentRow = event.target.closest('tr'); // Находим строку, в которой был клик
+        const waybillID = currentRow.querySelector('td:first-child').textContent; // Получаем ID накладной из первой ячейки строки
 
+        // Структура для хранения элементов второй таблицы
+        const secondTableElements = {
+            tableBody: tableBody, // Тело таблицы
+            rows: [] // Массив строк таблицы
+        };
+
+        // Проверяем, скрыта ли вторая таблица
         if (secondTable.classList.contains('hidden')) {
-            secondTable.classList.remove('hidden');
-            secondTable.classList.add('full-width');
-            tableBody.innerHTML = '';
+            // Показываем вторую таблицу
+            secondTable.classList.remove('hidden'); // Удаляем класс 'hidden', делая таблицу видимой
+            secondTable.classList.add('full-width'); // Добавляем класс 'full-width', чтобы таблица занимала всю ширину
+            secondTableElements.tableBody.innerHTML = ''; // Очищаем тело таблицы
 
+            // Загружаем данные о паспорте из JSON-файла
             fetch('../json/passport.json')
-                .then(response => response.json())
+                .then(response => response.json()) // Преобразуем ответ сервера в формат JSON
                 .then(data => {
+                    // Фильтруем данные, оставляя только записи с соответствующим ID накладной
                     let needData = data.filter(passport => passport.waybillID == waybillID);
+
+                    // Отрисовка данных в таблицу
                     needData.forEach(passport => {
-                        let row = document.createElement('tr');
+                        // Структура для хранения строки
+                        const row = {
+                            element: document.createElement('tr'), // Создаем элемент строки
+                            cells: [] // Массив ячеек строки
+                        };
+
+                        // Отрисовка ячеек строки
                         Object.values(passport).forEach(value => {
-                            let cell = document.createElement('td');
+                            // Структура для хранения ячейки
+                            const cell = {
+                                element: document.createElement('td'), // Создаем элемент ячейки
+                                content: value // Сохраняем значение ячейки
+                            };
+
+                            // Если значение не равно 0, добавляем текст в ячейку
                             if (value !== 0) {
-                                cell.textContent = value;
+                                cell.element.textContent = cell.content;
                             }
-                            row.appendChild(cell);
+
+                            // Добавляем ячейку в строку
+                            row.element.appendChild(cell.element);
+                            row.cells.push(cell.element);
                         });
-                        tableBody.appendChild(row);
+
+                        // Добавляем строку в таблицу
+                        secondTableElements.tableBody.appendChild(row.element);
+                        secondTableElements.rows.push(row.element);
                     });
                 });
         } else {
-            secondTable.classList.add('hidden');
-            secondTable.classList.remove('full-width');
-            tableBody.innerHTML = '';
+            // Скрываем вторую таблицу
+            secondTable.classList.add('hidden'); // класс 'hidden', делаем таблицу невидимой
+            secondTable.classList.remove('full-width'); // Удалить класс 'full-width', чтобы таблица не занимала всю ширину
+            secondTableElements.tableBody.innerHTML = ''; // Очистить тело таблицы
         }
     }
 });
 
-
 function GetNomenclatureWaybillID() {
     const tableBody = document.querySelector('#nomTable tbody');
     const passportTable = document.querySelector('#passportTable');
-//const hidePassportTableButton = document.getElementById('hidePassportTableButton');
+    //const hidePassportTableButton = document.getElementById('hidePassportTableButton');
 
+    // Структура для хранения элементов страницы
+    const pageElements = {
+        waybillNumDepDate: document.querySelector('.waybillNum'),
+        waybillSenDate: document.querySelector('.waybillSenDate'),
+        waybillDepsFrom: document.querySelector('.waybillDepsFrom'),
+        waybillSending: document.querySelector('.waybillSending'),
+        waybillRecDate: document.querySelector('.waybillRecDate'),
+        waybillDeppTo: document.querySelector('.waybillDeppTo'),
+        waybillReceiver: document.querySelector('.waybillReceiver')
+    };
+
+    // Получение данных из URL-параметров
     new URLSearchParams(window.location.search).forEach((value, name) => {
-        let waybillID = value;
-        let waybillNumDepDate = new URLSearchParams(window.location.search).get('waybillNumDepDate');
-        const WaybillFullNumber = document.querySelector('.waybillNum ');
-        WaybillFullNumber.innerHTML = `${waybillNumDepDate}`;
-        let waybillDateSend = new URLSearchParams(window.location.search).get('waybillDateSend');
-        const waybillSenderDate = document.querySelector('.waybillSenDate ');
-        waybillSenderDate.innerHTML = `${waybillDateSend}`;
-        let waybillDepFrom = new URLSearchParams(window.location.search).get('waybillDepFrom');
-        const waybillDepartFrom = document.querySelector('.waybillDepsFrom ');
-        waybillDepartFrom.innerHTML = `${waybillDepFrom}`;
+        const waybillID = value; // ID накладной
+        const waybillNumDepDate = new URLSearchParams(window.location.search).get('waybillNumDepDate');
+        const waybillDateSend = new URLSearchParams(window.location.search).get('waybillDateSend');
+        const waybillDepFrom = new URLSearchParams(window.location.search).get('waybillDepFrom');
+        const waybillSender = new URLSearchParams(window.location.search).get('waybillSender');
+        const waybillGetDate = new URLSearchParams(window.location.search).get('waybillGetDate');
+        const waybillDepTo = new URLSearchParams(window.location.search).get('waybillDepTo');
+        const waybillReceiver = new URLSearchParams(window.location.search).get('waybillReceiver');
 
-        let waybillSender = new URLSearchParams(window.location.search).get('waybillSender');
-        const Waybillsends = document.querySelector('.waybillSending ');
-        Waybillsends.innerHTML = `${waybillSender}`;
+        // Установка данных на странице
+        pageElements.waybillNumDepDate.innerHTML = waybillNumDepDate;
+        pageElements.waybillSenDate.innerHTML = waybillDateSend;
+        pageElements.waybillDepsFrom.innerHTML = waybillDepFrom;
+        pageElements.waybillSending.innerHTML = waybillSender;
+        pageElements.waybillRecDate.innerHTML = waybillGetDate;
+        pageElements.waybillDeppTo.innerHTML = waybillDepTo;
+        pageElements.waybillReceiver.innerHTML = waybillReceiver;
 
-        let waybillGetDate = new URLSearchParams(window.location.search).get('waybillGetDate');
-        const WaybillreceiverDate = document.querySelector('.waybillRecDate ');
-        WaybillreceiverDate.innerHTML = `${waybillGetDate}`;
-        let waybillDepTo = new URLSearchParams(window.location.search).get('waybillDepTo');
-        const waybillDepartTo = document.querySelector('.waybillDeppTo ');
-        waybillDepartTo.innerHTML = `${waybillDepTo}`;
-
-        let waybillReceiver = new URLSearchParams(window.location.search).get('waybillReceiver');
-        const waybillRec = document.querySelector('.waybillReceiver ');
-        waybillRec.innerHTML = `${waybillReceiver}`;
-
-
+        // Загрузка данных о номенклатуре из JSON-файла
         fetch('../json/nomenclature.json')
             .then(response => response.json())
             .then(data => {
+                // Фильтруем данные, оставляя только записи с соответствующим ID накладной
                 let needData = data.filter(nomenclature => nomenclature.waybillID == waybillID);
 
                 needData.forEach(nomenclature => {
-                    let row = document.createElement('tr');
+                    // Структура для хранения строки
+                    const row = {
+                        element: document.createElement('tr'),
+                        cells: [] // Массив ячеек строки
+                    };
 
+                    // Отрисовка ячеек строки
                     for (let item in nomenclature) {
                         if (Object.prototype.hasOwnProperty.call(nomenclature, item) && item !== 'waybillID' && item !== 'nomenclatureID') {
-                            let cell = document.createElement('td');
-                            if (nomenclature[item] !== 0) {
-                                cell.textContent = nomenclature[item];
+                            // Структура для хранения ячейки
+                            const cell = {
+                                element: document.createElement('td'),
+                                content: nomenclature[item]
+                            };
+
+                            if (cell.content !== 0) {
+                                cell.element.textContent = cell.content;
                             }
-                            row.appendChild(cell);
+
+                            // Добавляем ячейку в строку
+                            row.element.appendChild(cell.element);
+                            row.cells.push(cell.element);
                         }
                     }
 
-                    row.addEventListener('click', function () {
+                    // Добавляем обработчик клика по строке
+                    row.element.addEventListener('click', function () {
                         GetPassportWaybillID(waybillID);
                         passportTable.style.display = 'table';
-                        hidePassportTableButton.style.display = 'block';
+                        //hidePassportTableButton.style.display = 'block';
                     });
 
-                    tableBody.appendChild(row);
+                    // Добавляем строку в таблицу
+                    tableBody.appendChild(row.element);
                 });
             });
     });
@@ -176,30 +189,39 @@ const rows = document.querySelectorAll("#nomTable tr");
 
 //функция для отображения таблицы с СП
 function GetPassportWaybillID() {
-    ClearPassportTable();
-    const tableBody = document.querySelector('#passportTable tbody');
+    ClearPassportTable(); // Очистка таблицы паспортов перед загрузкой новых данных
 
+    const tableBody = document.querySelector('#passportTable tbody'); // Получение тела таблицы паспортов
+
+    // Получение waybillID из URL-параметров
     new URLSearchParams(window.location.search).forEach((value, name) => {
-        let waybillID = `${value}`;
+        let waybillID = value; // Извлечение значения waybillID из URL-параметров
 
+        // Запрос к JSON-файлу с данными о паспортах
         fetch('../json/passport.json')
-            .then(response => response.json())
+            .then(response => response.json()) // Преобразование ответа сервера в JSON-объект
             .then(data => {
+                // Фильтрация данных о паспортах по waybillID
                 let needData = data.filter(passport => passport.waybillID == waybillID);
-                needData.forEach(passport => {
-                    let row = document.createElement('tr');
 
+                // Добавление данных о паспортах в таблицу
+                needData.forEach(passport => {
+                    let row = document.createElement('tr'); // Создание новой строки в таблице
+
+                    // Проход по свойствам объекта 'passport'
                     for (let item in passport) {
+                        // Проверка, является ли свойство 'passport' собственным (не наследуемым) и не является waybillID, passportID или nomenclatureID
                         if (Object.prototype.hasOwnProperty.call(passport, item) && item !== 'waybillID' && item !== 'passportID' && item !== 'nomenclatureID') {
-                            let cell = document.createElement('td');
+                            let cell = document.createElement('td'); // Создание ячейки в таблице
+
+                            // Добавление значения свойства в ячейку, если оно не равно 0
                             if (passport[item] !== 0) {
                                 cell.textContent = passport[item];
                             }
-                            row.appendChild(cell);
+                            row.appendChild(cell); // Добавление ячейки в строку
                         }
                     }
-
-                    tableBody.appendChild(row);
+                    tableBody.appendChild(row); // Добавление строки в таблицу
                 });
             });
     });
@@ -238,10 +260,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Получаем элементы модального окна и кнопки закрытия
     const modal = document.getElementById('modal');
     const closeButton = document.querySelector('.close');
     const saveButton = document.getElementById('saveChanges');
     const confirmDeleteButton = document.getElementById('confirmDeleteBtn'); // Кнопка "Подтвердить удаление"
+
+    // Структура для хранения данных формы
+    const formData = {
+        waybillNumDepDate: '',
+        waybillSenDate: '',
+        waybillDepsFrom: '',
+        waybillSending: '',
+        waybillRecDate: '',
+        waybillDeppTo: '',
+        waybillReceiver: ''
+    };
 
     // Открыть модальное окно при клике на кнопку "Редактировать накладную"
     document.getElementById('edit-button').addEventListener('click', function () {
@@ -249,90 +283,117 @@ document.addEventListener('DOMContentLoaded', function () {
         fillModalWithData(); // Заполнить поля модального окна данными из шапки таблицы
     });
 
-    // Закрыть модальное окно при клике на крестик
-    closeButton.addEventListener('click', function () {
+    // Закрыть модальное окно при клике на крестик или вне окна
+    const closeAction = function () {
         modal.style.display = 'none';
-    });
+    };
 
-    // Закрыть модальное окно при клике вне окна
+    closeButton.addEventListener('click', closeAction);
+
     window.addEventListener('click', function (event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
+        if (event.target === modal) {
+            closeAction();
         }
     });
 
     // Функция для заполнения полей модального окна данными из шапки таблицы
     function fillModalWithData() {
-        // Получить данные из шапки таблицы
-        const waybillNumDepDate = document.querySelector('.waybillNum').textContent;
-        const waybillSenDate = document.querySelector('.waybillSenDate').textContent;
-        const waybillDepsFrom = document.querySelector('.waybillDepsFrom').textContent;
-        const waybillSending = document.querySelector('.waybillSending').textContent;
-        const waybillRecDate = document.querySelector('.waybillRecDate').textContent;
-        const waybillDeppTo = document.querySelector('.waybillDeppTo').textContent;
-        const waybillReceiver = document.querySelector('.waybillReceiver').textContent;
+        // Получение всех элементов с классом 'modal-field' (поля ввода в модальном окне)
+        const fields = document.querySelectorAll('.modal-field');
 
-        // Заполнить поля модального окна данными из шапки таблицы
-        document.getElementById('waybillNumDepDate').value = waybillNumDepDate;
-        document.getElementById('waybillSenDate').value = waybillSenDate;
-        document.getElementById('waybillDepsFrom').value = waybillDepsFrom;
-        document.getElementById('waybillSending').value = waybillSending;
-        document.getElementById('waybillRecDate').value = waybillRecDate;
-        document.getElementById('waybillDeppTo').value = waybillDeppTo;
-        document.getElementById('waybillReceiver').value = waybillReceiver;
+        // Перебор всех полей ввода в модальном окне
+        fields.forEach(field => {
+            // Извлечение имени поля из ID элемента, удаляя "waybill"
+            const fieldName = field.id.replace('waybill', '');
+
+            // Сохранение значения поля ввода в объект formData
+            formData[fieldName] = field.textContent;
+        });
+
+        // Обновление полей модального окна данными из formData
+        updateModalFields();
+    }
+
+// Функция для обновления полей модального окна данными из formData
+    function updateModalFields() {
+        // Проход по всем ключам объекта formData
+        for (const key in formData) {
+            // Проверка, является ли ключ собственным (не наследуемым) свойством объекта formData
+            if (Object.prototype.hasOwnProperty.call(formData, key)) {
+                // Нахождение элемента с ID, составленным из "waybill" и имени ключа
+                document.getElementById(`waybill${key}`).value = formData[key];
+                // Запись значения из formData в поле ввода модального окна
+            }
+        }
     }
 
     // Обработчик события нажатия на кнопку "Сохранить изменения"
     saveButton.addEventListener('click', function () {
-        // Получить новые значения из полей модального окна
-        const waybillNumDepDate = document.getElementById('waybillNumDepDate').value;
-        const waybillSenDate = document.getElementById('waybillSenDate').value;
-        const waybillDepsFrom = document.getElementById('waybillDepsFrom').value;
-        const waybillSending = document.getElementById('waybillSending').value;
-        const waybillRecDate = document.getElementById('waybillRecDate').value;
-        const waybillDeppTo = document.getElementById('waybillDeppTo').value;
-        const waybillReceiver = document.getElementById('waybillReceiver').value;
+        const fields = document.querySelectorAll('.modal-field');
+        fields.forEach(field => {
+            const fieldName = field.id.replace('waybill', '');
+            formData[fieldName] = field.value;
+        });
+        updateTableData(); //обновить данные в таблице
+        closeModal(); //закрыть модальное окно
+        saveChangesToJSON(); //сохранить изменения в файле
+    });
 
-        // Обновить данные в шапке таблицы
-        document.querySelector('.waybillNum').textContent = waybillNumDepDate;
-        document.querySelector('.waybillSenDate').textContent = waybillSenDate;
-        document.querySelector('.waybillDepsFrom').textContent = waybillDepsFrom;
-        document.querySelector('.waybillSending').textContent = waybillSending;
-        document.querySelector('.waybillRecDate').textContent = waybillRecDate;
-        document.querySelector('.waybillDeppTo').textContent = waybillDeppTo;
-        document.querySelector('.waybillReceiver').textContent = waybillReceiver;
+    // Функция для обновления данных в таблице
+    function updateTableData() {
+        const fields = document.querySelectorAll('.table-field'); // Получаем все элементы с классом 'table-field' (поля ввода в таблице)
+        fields.forEach(field => {
+            const fieldName = field.classList.contains('waybillID') ? 'ID' : field.classList[0].replace('waybill', ''); // Извлекаем имя поля
 
-        // Закрыть модальное окно
+            const correspondingField = document.querySelector(`.waybill${fieldName}`); // Находим элемент в таблице с соответствующим именем поля
+            if (correspondingField) {
+                correspondingField.textContent = formData[fieldName]; // Обновляем текст элемента в таблице значением из `formData` по имени поля
+            }
+        });
+    }
+
+    // Функция для закрытия модального окна
+    function closeModal() {
         modal.style.display = 'none';
+    }
 
-        // Сохранение изменений в JSON файле
+
+    // Функция для сохранения изменений в JSON файл
+    function saveChangesToJSON() {
+        // Запрос к JSON-файлу 'waybill.json' для получения данных
         fetch('../json/waybill.json')
-            .then(response => response.json())
+            .then(response => response.json()) // Преобразование ответа сервера в JSON-объект
             .then(data => {
-                // Найти запись по уникальному идентификатору и обновить её
-                const idToUpdate = 1051762; // Пример идентификатора
+                // Идентификатор записи, которую нужно обновить (предположим, что он равен 0)
+                const idToUpdate = 0;
+                // Поиск записи в JSON-данных, соответствующей idToUpdate
                 const updatedEntry = data.find(entry => entry.waybillID === idToUpdate);
-                if (updatedEntry) {
-                    updatedEntry.waybillNumDepDate = waybillNumDepDate;
-                    updatedEntry.waybillSenDate = waybillSenDate;
-                    updatedEntry.waybillDepsFrom = waybillDepsFrom;
-                    updatedEntry.waybillSending = waybillSending;
-                    updatedEntry.waybillRecDate = waybillRecDate;
-                    updatedEntry.waybillDeppTo = waybillDeppTo;
-                    updatedEntry.waybillReceiver = waybillReceiver;
 
-                    // Сохранить обновленные данные обратно в файл
+                // Если запись найдена
+                if (updatedEntry) {
+                    // Проход по ключам объекта formData
+                    Object.keys(formData).forEach(key => {
+                        // Обновление значений в записи updatedEntry значениями из formData
+                        updatedEntry[key] = formData[key];
+                    });
+
+                    // Преобразование обновленных JSON-данных в строку
                     const updatedData = JSON.stringify(data, null, 2);
+
+                    // Создание объекта Blob с обновленными JSON-данными
                     const blob = new Blob([updatedData], {type: 'application/json'});
+
+                    // Получение URL объекта Blob
                     const url = URL.createObjectURL(blob);
+
+                    // Создание ссылки для загрузки файла
                     const a = document.createElement('a');
                     a.href = url;
                     a.download = 'waybill.json';
-                    a.click();
+                    a.click(); // Запуск загрузки файла
                 }
             });
-    });
-
+    }
 });
 
 
@@ -347,11 +408,13 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', function (
 
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Получение необходимых элементов из DOM
     const addPassportBtn = document.getElementById('addPassportBtn');
     const modal = document.getElementById('addPassportModal');
     const span = document.getElementsByClassName('close')[0];
     const params = new URLSearchParams(window.location.search);
 
+     // Получение параметров из URL
     const waybillID = params.get('id');
     const waybillNumDepDate = params.get('waybillNumDepDate');
     const waybillDateSend = params.get('waybillDateSend');
@@ -372,6 +435,7 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.style.display = 'none';
     }
 
+    // Закрытие модального окна при клике вне его области
     window.onclick = function (event) {
         if (event.target == modal) {
             modal.style.display = 'none';
@@ -395,17 +459,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
         passportData.push(newPassport);
         localStorage.setItem('passportData', JSON.stringify(passportData));
-        downloadJSON(passportData, 'passport.json');
-        modal.style.display = 'none';
+        downloadJSON(passportData, 'passport.json'); // Вызов функции для скачивания данных в виде файла
+        modal.style.display = 'none'; // Закрытие модального окна после сохранения данных
     }
 });
 
+// Функция для скачивания JSON-данных в виде файла
 function downloadJSON(data, filename) {
+    // Создаем Blob из JSON-данных
     const file = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+
+    // Создаем ссылку для скачивания файла
     const a = document.createElement('a');
     const url = URL.createObjectURL(file);
     a.href = url;
     a.download = filename;
+
+    // Добавляем ссылку на страницу, запускаем скачивание и очищаем после завершения
     document.body.appendChild(a);
     a.click();
     setTimeout(() => {
@@ -414,24 +484,28 @@ function downloadJSON(data, filename) {
     }, 0);
 }
 
-
+// Находим кнопку удаления накладной по ID и назначаем обработчик события
 const deleteWaybillBtn = document.getElementById('deleteButton');
 
 deleteWaybillBtn.onclick = function () {
+    // Получаем ID накладной из параметров URL
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
 
+    // Получаем данные накладной из localStorage или создаем новый массив
     let waybillData = JSON.parse(localStorage.getItem('waybillData')) || [];
 
-    // Находим индекс накладной по ID
+    // Находим индекс накладной в массиве по ID
     const waybillIndex = waybillData.findIndex(w => w.waybillID == id);
 
     if (waybillIndex !== -1) {
         // Удаляем накладную из массива по индексу
         waybillData.splice(waybillIndex, 1);
 
+        // Обновляем данные в localStorage
         localStorage.setItem('waybillData', JSON.stringify(waybillData));
 
+        // Создаем Blob с обновленными данными и скачиваем их в виде файла
         const blob = new Blob([JSON.stringify(waybillData, null, 2)], {type: 'application/json'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -439,6 +513,8 @@ deleteWaybillBtn.onclick = function () {
         a.download = 'waybill.json';
         document.body.appendChild(a);
         a.click();
+
+        // Удаляем ссылку после завершения скачивания
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
@@ -451,14 +527,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const senderModal = document.getElementById('SenderModal');
     const closeSenderModal = document.getElementsByClassName('close')[1];
 
+    //обработчик кнопки отправления накладной
     sendWaybillBtn.onclick = function () {
         senderModal.style.display = 'block';
     }
 
+    //обрабатываем клик закрытия окна
     closeSenderModal.onclick = function () {
         senderModal.style.display = 'none';
     }
 
+    //обработчик для закрытия при клике на любую область вне окна
     window.onclick = function (event) {
         if (event.target == senderModal) {
             senderModal.style.display = 'none';
@@ -467,6 +546,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const saveSenderBtn = document.getElementById('saveSenderBtn');
 
+
+//обработка нажатия на кнопку отправления накладной
     saveSenderBtn.onclick = function () {
         const senderName = document.getElementById('senderName').value;
         const urlParams = new URLSearchParams(window.location.search);
@@ -484,13 +565,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
             localStorage.setItem('waybillData', JSON.stringify(waybillData));
 
+            // Создаем Blob с данными в формате JSON и ссылку для скачинвания нового файла
             const blob = new Blob([JSON.stringify(waybillData, null, 2)], {type: 'application/json'});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'waybill.json';
+            a.download = 'waybill.json'; //оставляем имя без изменений для замены
             document.body.appendChild(a);
-            a.click();
+            a.click();// клик по ссылке
+            //удаляем ссылку и временный URL
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
@@ -505,14 +588,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const receiverModal = document.getElementById('receiverModal');
     const closeModal = document.getElementsByClassName('close')[0];
 
+    //обработчик кнопки получения накладной
     getWaybillBtn.onclick = function () {
         receiverModal.style.display = 'block';
     }
 
+    //обрабатываем клик закрытия окна
     closeModal.onclick = function () {
         receiverModal.style.display = 'none';
     }
 
+    //обработчик для закрытия при клике на любую область вне окна
     window.onclick = function (event) {
         if (event.target == receiverModal) {
             receiverModal.style.display = 'none';
@@ -521,6 +607,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const saveReceiverBtn = document.getElementById('saveReceiverBtn');
 
+    //обработка нажатия на кнопку сохранения
     saveReceiverBtn.onclick = function () {
         const receiverName = document.getElementById('receiverName').value;
         const urlParams = new URLSearchParams(window.location.search);
@@ -538,13 +625,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
             localStorage.setItem('waybillData', JSON.stringify(waybillData));
 
+
+// Создаем Blob с данными в формате JSON и ссылку для скачинвания нового файла
             const blob = new Blob([JSON.stringify(waybillData, null, 2)], {type: 'application/json'});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'waybill.json';
+            a.download = 'waybill.json'; //оставляем имя без изменений для замены
             document.body.appendChild(a);
-            a.click();
+            a.click(); // клик по ссылке
+            //удаляем ссылку и временный URL
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
