@@ -39,7 +39,7 @@ tr:nth-child(even) {
 
 tr:hover {
     background-color: #f2dcf2;
-      cursor: pointer;
+    cursor: pointer;
 }
 
 .modal {
@@ -118,6 +118,8 @@ button:hover {
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 
 .hidden {
@@ -129,6 +131,15 @@ button:hover {
     flex-direction: row;
     padding: 20px;
     margin-right: 10px;
+}
+
+.about > div {
+    flex: 1;
+    padding-left: 15px;
+}
+
+.waybill-label {
+    text-indent: 15px;
 }
 
 .about form {

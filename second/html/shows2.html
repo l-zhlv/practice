@@ -5,7 +5,7 @@
     <title>Номенклатура и паспорт</title>
     <link rel="stylesheet" href="../css/passnom.css">
     <link rel="icon" type="image/png" href="../img/icon1.png">
-   
+
 </head>
 <body>
 
@@ -26,7 +26,7 @@
                 <input type="number" id="nomenclatureID" name="nomenclatureID">
                 <label for="passportNum">Номер паспорта:</label>
                 <input type="number" id="passportNum" name="passportNum">
-                <label for="passportDep">Департамент паспорта:</label>
+                <label for="passportDep">Цех паспорта:</label>
                 <input type="number" id="passportDep" name="passportDep">
                 <label for="passportYear">Год паспорта:</label>
                 <input type="number" id="passportYear" name="passportYear">
@@ -87,10 +87,15 @@
 </div>
 
 <div class="top-nav">
+
     <div class="about">
         <header><p>Номер накладной:</p></header>
         <header><p class='waybillNum' style="text-indent: 15px;"></p></header>
-        <header><p style="text-indent: 15px; ">Время отправления:</p></header>
+    </div>
+    <div class="about">
+<!--        <header><p>Номер накладной:</p></header>-->
+        <!--        <header><p class='waybillNum' style="text-indent: 15px;"></p></header>-->
+        <header><p>Время отправления:</p></header>
         <header><p class='waybillSenDate' style="text-indent: 15px; "></p></header>
         <header><p style="text-indent: 15px; ">Цех отправления:</p></header>
         <header><p class='waybillDepsFrom' style="text-indent: 15px; "></p></header>
@@ -98,6 +103,7 @@
         <header><p class='waybillSending' style="text-indent: 15px; "></p></header>
     </div>
     <div class="about">
+
         <header><p>Время получения:</p></header>
         <header><p class='waybillRecDate' style="text-indent: 15px; "></p></header>
         <header><p style="text-indent: 15px; ">Цех получения:</p></header>
@@ -176,8 +182,6 @@
         <thead>
         <tr>
             <th>Номер паспорта:</th>
-            <th>Цех:</th>
-            <th>Год:</th>
             <th>Количество деталей:</th>
             <th>Количество заготовок:</th>
             <th>Количество образцов:</th>

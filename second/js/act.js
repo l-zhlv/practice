@@ -164,113 +164,165 @@ function select_row(row) {
     row.classList.add('selected'); // Добавляем класс 'selected' кликнутой строке
 }
 
+
+const rowsPerPage = 10;
+let currentPage = 1;
+let currentData = [];
+
 function searchInJSON(searchValue) {
-    // Загружаем JSON-файл с данными о накладных
     fetch('../json/waybill.json')
         .then(response => response.json())
         .then(data => {
-            // Фильтруем данные, оставляя только записи, содержащие искомую строку
             const filteredData = data.filter(item => {
-                // Структура для хранения свойств объекта в нижнем регистре
                 const lowerCaseItem = Object.keys(item).reduce((acc, key) => {
-                    // Преобразование в нижний регистр
                     acc[key] = typeof item[key] === 'string' ? item[key].toLowerCase() : item[key];
                     return acc;
                 }, {});
-
-                // Проверка на наличие искомой строки
                 return Object.values(lowerCaseItem).some(value => typeof value === 'string' && value.includes(searchValue.toLowerCase()));
             });
 
-            // Отображение отфильтрованных записей на странице
-            displayFilteredData(filteredData);
+            currentData = filteredData;
+            currentPage = 1; // Reset to first page on new search
+            displayFilteredData();
         })
         .catch(error => {
-            // Выводим ошибку, если произошла ошибка при получении данных
             console.error('Error fetching data:', error);
         });
 }
 
-//функция для отображения данных с учетом поиска
-function displayFilteredData(data) {
+function displayFilteredData() {
     const tableBody = document.querySelector('#waybillTable tbody');
-    tableBody.innerHTML = ''; // Очищаем содержимое таблицы
+    tableBody.innerHTML = '';
 
-    data.forEach(waybill => {
-        const row = {
-            element: document.createElement('tr'),
-            firstColumn: document.createElement('td'),
-            sendDate: document.createElement('td'),
-            depFrom: document.createElement('td'),
-            sender: document.createElement('td'),
-            receiveDate: document.createElement('td'),
-            depTo: document.createElement('td'),
-            receiver: document.createElement('td')
-        };
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const paginatedData = currentData.slice(start, end);
 
-        // Настройка строки
-        row.element.classList.add("content");
-        row.element.setAttribute('id', waybill.waybillID);
+    paginatedData.forEach(waybill => {
+        const row = document.createElement('tr');
+        row.classList.add("content");
+        row.setAttribute('id', waybill.waybillID);
 
-        // Обработчик клика по строке
-        row.element.addEventListener('click', function () {
-            select_row(row.firstColumn); // Выделение строки
-            sendId(row.element.id, `${waybill.waybillNum}/${waybill.waybillDep} ${GetDate(waybill.waybillDate)}`, GetDateAndTime(waybill.waybillSendDate), waybill.waybillDepFrom, waybill.waybillSender, GetDateAndTime(waybill.waybillReceiveDate), waybill.waybillDepTo, waybill.waybillReceiver);
+        row.addEventListener('click', function () {
+            select_row(row.firstColumn);
+            sendId(row.id, `${waybill.waybillNum}/${waybill.waybillDep} ${GetDate(waybill.waybillDate)}`, GetDateAndTime(waybill.waybillSendDate), waybill.waybillDepFrom, waybill.waybillSender, GetDateAndTime(waybill.waybillReceiveDate), waybill.waybillDepTo, waybill.waybillReceiver);
         });
 
-        // Настройка первой колонки
-        row.firstColumn.addEventListener('click', () => select_row(row.firstColumn));
-        row.firstColumn.style.textAlign = "right";
-        row.firstColumn.innerHTML = `${waybill.waybillNum}/${waybill.waybillDep} ${GetDate(waybill.waybillDate)}`;
-        row.element.appendChild(row.firstColumn);
+        const firstColumn = document.createElement('td');
+        firstColumn.innerHTML = `${waybill.waybillNum}/${waybill.waybillDep} ${GetDate(waybill.waybillDate)}`;
+        firstColumn.style.textAlign = "right";
+        row.appendChild(firstColumn);
 
-        // Настройка колонки с датой отправки
-        row.sendDate.innerText = GetDateAndTime(waybill.waybillSendDate);
-        row.sendDate.style.textAlign = "left";
-        row.element.appendChild(row.sendDate);
+        const sendDate = document.createElement('td');
+        sendDate.innerText = GetDateAndTime(waybill.waybillSendDate);
+        sendDate.style.textAlign = "left";
+        row.appendChild(sendDate);
 
-        // Настройка колонки с отделением отправления
-        row.depFrom.innerText = waybill.waybillDepFrom;
-        row.depFrom.style.textAlign = "right";
-        row.element.appendChild(row.depFrom);
+        const depFrom = document.createElement('td');
+        depFrom.innerText = waybill.waybillDepFrom;
+        depFrom.style.textAlign = "right";
+        row.appendChild(depFrom);
 
-        // Настройка колонки с отправителем
-        row.sender.innerText = waybill.waybillSender;
-        row.sender.style.textAlign = "left";
-        row.element.appendChild(row.sender);
+        const sender = document.createElement('td');
+        sender.innerText = waybill.waybillSender;
+        sender.style.textAlign = "left";
+        row.appendChild(sender);
 
-        // Настройка колонки с датой получения
-        row.receiveDate.innerText = GetDateAndTime(waybill.waybillReceiveDate);
-        row.receiveDate.style.textAlign = "left";
-        row.element.appendChild(row.receiveDate);
+        const receiveDate = document.createElement('td');
+        receiveDate.innerText = GetDateAndTime(waybill.waybillReceiveDate);
+        receiveDate.style.textAlign = "left";
+        row.appendChild(receiveDate);
 
-        // Настройка колонки с отделением назначения
-        row.depTo.dataset.value = waybill.waybillDepTo;
-        row.depTo.innerText = waybill.waybillDepTo;
-        row.depTo.style.textAlign = "right";
-        row.element.appendChild(row.depTo);
+        const depTo = document.createElement('td');
+        depTo.innerText = waybill.waybillDepTo;
+        depTo.style.textAlign = "right";
+        row.appendChild(depTo);
 
-        // Настройка колонки с получателем
-        row.receiver.innerText = waybill.waybillReceiver;
-        row.receiver.style.textAlign = "left";
-        row.element.appendChild(row.receiver);
+        const receiver = document.createElement('td');
+        receiver.innerText = waybill.waybillReceiver;
+        receiver.style.textAlign = "left";
+        row.appendChild(receiver);
 
-        // Добавляем строку в таблицу
-        tableBody.appendChild(row.element);
+        tableBody.appendChild(row);
     });
 
-    // Пересчитываем пагинацию
-    const pageCount = Math.ceil(data.length / rowsCount);
-    CreatePagination(pageCount, 1, pagination);
+    createPagination(currentData.length);
 }
 
-// Функция для поиска на странице
+function createPagination(totalRows) {
+    const pageCount = Math.ceil(totalRows / rowsPerPage);
+    const pagination = document.getElementById('pagination');
+    pagination.innerHTML = '';
+
+    for (let i = 1; i <= pageCount; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.innerText = i;
+        if (i === currentPage) {
+            pageButton.classList.add('active');
+        }
+        pageButton.addEventListener('click', () => {
+            currentPage = i;
+            displayFilteredData();
+        });
+        pagination.appendChild(pageButton);
+    }
+}
+
 function searchTable() {
-    const input = document.querySelector('input[name="s"]').value; // Ввод искомого значения
+    const input = document.querySelector('input[name="s"]').value;
     searchInJSON(input);
 }
 
-document.querySelector('input[name="s"]').addEventListener('input', searchTable); // Получение введенной информации
+function removeLeadingZeros(str) {
+    return str.replace(/^0+/, '');
+}
+
+function filterTable() {
+    const depFrom = removeLeadingZeros(document.getElementById("waybillDepFrom2").value);
+    const depTo = removeLeadingZeros(document.getElementById("waybillDepTo").value);
+
+    const tableRows = document.querySelectorAll("#waybillTable tbody tr");
+    const filteredRows = [];
+
+    tableRows.forEach(row => {
+        const depFromCell = removeLeadingZeros(row.querySelector("td:nth-child(3)").textContent);
+        const depToCell = removeLeadingZeros(row.querySelector("td:nth-child(6)").textContent);
+
+        if ((depFrom === "Цех" || depFrom === depFromCell) && (depTo === "Цех" || depTo === depToCell)) {
+            filteredRows.push(row);
+        }
+    });
+
+    tableRows.forEach(row => {
+        row.style.display = "none";
+    });
+
+    filteredRows.forEach(row => {
+        row.style.display = "";
+    });
+
+    const pageCount = Math.ceil(filteredRows.length / rowsPerPage);
+    createPagination(pageCount, 1);
+
+    showPage(1, rowsPerPage, filteredRows);
+}
+
+function showPage(pageNumber, rowsPerPage, filteredRows) {
+    const start = (pageNumber - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    filteredRows.forEach(row => {
+        row.style.display = "none";
+    });
+
+    for (let i = start; i < end && i < filteredRows.length; i++) {
+        filteredRows[i].style.display = "";
+    }
+}
+
+document.querySelector('input[name="s"]').addEventListener('input', searchTable);
+document.getElementById("waybillDepFrom2").addEventListener("change", filterTable);
+document.getElementById("waybillDepTo").addEventListener("change", filterTable);
 
 
 // Функция сравнения чисел

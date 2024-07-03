@@ -32,71 +32,80 @@ fetch('../json/passport.json')
         localStorage.setItem('passportData', JSON.stringify(data));
     });
 
-document.getElementById('nomTable').addEventListener('click', function (event) {
-    // Получаем элемент второй таблицы по id 'passportTable'
-    const secondTable = document.getElementById('passportTable');
-    // Получаем тело второй таблицы
+function GetPassportNomenclatureID(nomenclatureID) {
+// Очищаем таблицу паспорта
+    ClearPassportTable();
+
+// Получаем тело таблицы паспорта
     const tableBody = document.querySelector('#passportTable tbody');
 
-    // Проверяем, что целью клика был элемент TD
+// Загружаем данные паспорта из JSON файла
+    fetch('../json/passport.json')
+        .then(response => response.json())
+        .then(data => {
+// Фильтруем данные по ID номенклатуры
+            let needData = data.filter(passport => passport.nomenclatureID == nomenclatureID);
+
+            needData.forEach(passport => {
+                let row = document.createElement('tr');
+
+// Объединяем "Номер паспорта", "Цех" и "Год" в одну ячейку
+                const combinedValue = `${passport.passportNum}/${passport.passportDep} ${passport.passportYear}`;
+                const combinedCell = document.createElement('td');
+                combinedCell.textContent = combinedValue;
+                combinedCell.style.textAlign = 'right'; // Выравнивание по правому краю
+                combinedCell.onclick = () => select_row(combinedCell); // Добавляем обработчик события клика
+                row.appendChild(combinedCell);
+
+// Добавляем остальные ячейки в строку
+                const detailsCells = ['quantityDetails', 'quantityWorkpieces', 'quantitySamples'];
+                detailsCells.forEach(detail => {
+                    const cell = document.createElement('td');
+                    const value = passport[detail];
+                    if (value !== 0) {
+                        cell.textContent = value;
+                    }
+                    cell.style.textAlign = 'left'; // Выравнивание по левому краю
+                    cell.onclick = () => select_row(cell); // Добавляем обработчик события клика
+                    row.appendChild(cell);
+                });
+
+                tableBody.appendChild(row);
+            });
+        });
+
+}
+
+document.getElementById('nomTable').addEventListener('click', function (event) {
+    // Получение ссылки на вторую таблицу
+    const secondTable = document.getElementById('passportTable');
+    // Получение тела таблицы
+    const tableBody = document.querySelector('#passportTable tbody');
+
+    // Проверка, была ли кликнута ячейка (TD)
     if (event.target.tagName === 'TD') {
-        // Получаем строку, в которой был сделан клик
+        // Получение строки, в которой была кликнута ячейка
         const currentRow = event.target.closest('tr');
-        // Получаем ID номенклатуры из второй ячейки строки
+
+        // Извлечение значения nomenclatureID из второй ячейки строки
         const nomenclatureID = currentRow.querySelector('td:nth-child(2)').textContent;
 
-        // Создаем объект для хранения элементов второй таблицы
-        const secondTableElements = {
-            tableBody: tableBody,
-            rows: []
-        };
-
-        // Проверяем, скрыта ли вторая таблица
+        // Проверка, скрыта ли вторая таблица
         if (secondTable.classList.contains('hidden')) {
-            // Убираем класс 'hidden' и добавляем класс 'full-width'
+            // Отображение второй таблицы
             secondTable.classList.remove('hidden');
             secondTable.classList.add('full-width');
-            // Очищаем содержимое тела таблицы
-            secondTableElements.tableBody.innerHTML = '';
+            // Очистка тела таблицы
+            tableBody.innerHTML = '';
 
-            // Загружаем данные из JSON файла
-            fetch('../json/passport.json')
-                .then(response => response.json())
-                .then(data => {
-                    // Фильтруем данные по ID номенклатуры
-                    let needData = data.filter(passport => passport.nomenclatureID == nomenclatureID);
-
-                    // Добавляем строки в таблицу
-                    needData.forEach(passport => {
-                        const row = {
-                            element: document.createElement('tr'),
-                            cells: []
-                        };
-
-                        // Добавляем ячейки в строку
-                        Object.values(passport).forEach(value => {
-                            const cell = {
-                                element: document.createElement('td'),
-                                content: value
-                            };
-
-                            if (value !== 0) {
-                                cell.element.textContent = cell.content;
-                            }
-
-                            row.element.appendChild(cell.element);
-                            row.cells.push(cell.element);
-                        });
-
-                        secondTableElements.tableBody.appendChild(row.element);
-                        secondTableElements.rows.push(row.element);
-                    });
-                });
+            // Вызов функции для загрузки данных о паспортах для указанного nomenclatureID
+            GetPassportNomenclatureID(nomenclatureID);
         } else {
-            // Скрываем таблицу и очищаем содержимое тела таблицы
+            // Скрытие второй таблицы
             secondTable.classList.add('hidden');
             secondTable.classList.remove('full-width');
-            secondTableElements.tableBody.innerHTML = '';
+            // Очистка тела таблицы
+            tableBody.innerHTML = '';
         }
     }
 });
@@ -178,40 +187,6 @@ function GetNomenclatureWaybillID() {
                 });
             });
     });
-}
-
-// Функция для получения данных паспорта по ID номенклатуры
-function GetPassportNomenclatureID(nomenclatureID) {
-    // Очищаем таблицу паспорта
-    ClearPassportTable();
-
-    // Получаем тело таблицы паспорта
-    const tableBody = document.querySelector('#passportTable tbody');
-
-    // Загружаем данные паспорта из JSON файла
-    fetch('../json/passport.json')
-        .then(response => response.json())
-        .then(data => {
-            // Фильтруем данные по ID номенклатуры
-            let needData = data.filter(passport => passport.nomenclatureID == nomenclatureID);
-
-            // Добавляем строки в таблицу
-            needData.forEach(passport => {
-                let row = document.createElement('tr');
-
-                for (let item in passport) {
-                    if (Object.prototype.hasOwnProperty.call(passport, item) && item !== 'waybillID' && item !== 'passportID' && item !== 'nomenclatureID') {
-                        let cell = document.createElement('td');
-
-                        if (passport[item] !== 0) {
-                            cell.textContent = passport[item];
-                        }
-                        row.appendChild(cell);
-                    }
-                }
-                tableBody.appendChild(row);
-            });
-        });
 }
 
 
