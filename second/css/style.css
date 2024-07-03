@@ -109,7 +109,7 @@ button:hover {
 /*}*/
 
 header {
-    color: black; /* темно-розовый */
+    color: black;
     text-align: center;
     font-size: x-large;
     font-weight: bold;
@@ -163,11 +163,11 @@ input {
 }
 
 
-/* Стили для контейнера с прокруткой */
-.table-container {
-    overflow-x: auto;
-    max-height: 400px; /* Максимальная высота контейнера */
-}
+/*!* Стили для контейнера с прокруткой *!*/
+/*.table-container {*/
+/*    overflow-x: auto;*/
+/*    max-height: 400px; !* Максимальная высота контейнера *!*/
+/*}*/
 
 
 body {

@@ -15,7 +15,7 @@ ClearPassportTable(); //очистить таблицу с паспортом
 fetch('../json/waybill.json')
     .then(response => response.json())
     .then(data => {
-        localStorage.setItem('waybillData', JSON.stringify(data)); // Сохранение JSON-объекта с данными в локальное хранилище под ключом 'waybillData'
+        localStorage.setItem('waybillData', JSON.stringify(data));
     });
 
 // Загрузка данных из nomenclature.json и сохранение их в локальное хранилище
@@ -33,80 +33,81 @@ fetch('../json/passport.json')
     });
 
 document.getElementById('nomTable').addEventListener('click', function (event) {
+    // Получаем элемент второй таблицы по id 'passportTable'
     const secondTable = document.getElementById('passportTable');
+    // Получаем тело второй таблицы
     const tableBody = document.querySelector('#passportTable tbody');
 
-    // Проверяем, был ли клик по ячейке таблицы
+    // Проверяем, что целью клика был элемент TD
     if (event.target.tagName === 'TD') {
-        const currentRow = event.target.closest('tr'); // Находим строку, в которой был клик
-        const waybillID = currentRow.querySelector('td:first-child').textContent; // Получаем ID накладной из первой ячейки строки
+        // Получаем строку, в которой был сделан клик
+        const currentRow = event.target.closest('tr');
+        // Получаем ID номенклатуры из второй ячейки строки
+        const nomenclatureID = currentRow.querySelector('td:nth-child(2)').textContent;
 
-        // Структура для хранения элементов второй таблицы
+        // Создаем объект для хранения элементов второй таблицы
         const secondTableElements = {
-            tableBody: tableBody, // Тело таблицы
-            rows: [] // Массив строк таблицы
+            tableBody: tableBody,
+            rows: []
         };
 
         // Проверяем, скрыта ли вторая таблица
         if (secondTable.classList.contains('hidden')) {
-            // Показываем вторую таблицу
-            secondTable.classList.remove('hidden'); // Удаляем класс 'hidden', делая таблицу видимой
-            secondTable.classList.add('full-width'); // Добавляем класс 'full-width', чтобы таблица занимала всю ширину
-            secondTableElements.tableBody.innerHTML = ''; // Очищаем тело таблицы
+            // Убираем класс 'hidden' и добавляем класс 'full-width'
+            secondTable.classList.remove('hidden');
+            secondTable.classList.add('full-width');
+            // Очищаем содержимое тела таблицы
+            secondTableElements.tableBody.innerHTML = '';
 
-            // Загружаем данные о паспорте из JSON-файла
+            // Загружаем данные из JSON файла
             fetch('../json/passport.json')
-                .then(response => response.json()) // Преобразуем ответ сервера в формат JSON
+                .then(response => response.json())
                 .then(data => {
-                    // Фильтруем данные, оставляя только записи с соответствующим ID накладной
-                    let needData = data.filter(passport => passport.waybillID == waybillID);
+                    // Фильтруем данные по ID номенклатуры
+                    let needData = data.filter(passport => passport.nomenclatureID == nomenclatureID);
 
-                    // Отрисовка данных в таблицу
+                    // Добавляем строки в таблицу
                     needData.forEach(passport => {
-                        // Структура для хранения строки
                         const row = {
-                            element: document.createElement('tr'), // Создаем элемент строки
-                            cells: [] // Массив ячеек строки
+                            element: document.createElement('tr'),
+                            cells: []
                         };
 
-                        // Отрисовка ячеек строки
+                        // Добавляем ячейки в строку
                         Object.values(passport).forEach(value => {
-                            // Структура для хранения ячейки
                             const cell = {
-                                element: document.createElement('td'), // Создаем элемент ячейки
-                                content: value // Сохраняем значение ячейки
+                                element: document.createElement('td'),
+                                content: value
                             };
 
-                            // Если значение не равно 0, добавляем текст в ячейку
                             if (value !== 0) {
                                 cell.element.textContent = cell.content;
                             }
 
-                            // Добавляем ячейку в строку
                             row.element.appendChild(cell.element);
                             row.cells.push(cell.element);
                         });
 
-                        // Добавляем строку в таблицу
                         secondTableElements.tableBody.appendChild(row.element);
                         secondTableElements.rows.push(row.element);
                     });
                 });
         } else {
-            // Скрываем вторую таблицу
-            secondTable.classList.add('hidden'); // класс 'hidden', делаем таблицу невидимой
-            secondTable.classList.remove('full-width'); // Удалить класс 'full-width', чтобы таблица не занимала всю ширину
-            secondTableElements.tableBody.innerHTML = ''; // Очистить тело таблицы
+            // Скрываем таблицу и очищаем содержимое тела таблицы
+            secondTable.classList.add('hidden');
+            secondTable.classList.remove('full-width');
+            secondTableElements.tableBody.innerHTML = '';
         }
     }
 });
 
+// Функция для получения ID номенклатуры из накладной
 function GetNomenclatureWaybillID() {
+    // Получаем тело таблицы и вторую таблицу
     const tableBody = document.querySelector('#nomTable tbody');
     const passportTable = document.querySelector('#passportTable');
-    //const hidePassportTableButton = document.getElementById('hidePassportTableButton');
 
-    // Структура для хранения элементов страницы
+    // Получаем элементы страницы
     const pageElements = {
         waybillNumDepDate: document.querySelector('.waybillNum'),
         waybillSenDate: document.querySelector('.waybillSenDate'),
@@ -117,9 +118,9 @@ function GetNomenclatureWaybillID() {
         waybillReceiver: document.querySelector('.waybillReceiver')
     };
 
-    // Получение данных из URL-параметров
+    // Обрабатываем параметры URL
     new URLSearchParams(window.location.search).forEach((value, name) => {
-        const waybillID = value; // ID накладной
+        const waybillID = value;
         const waybillNumDepDate = new URLSearchParams(window.location.search).get('waybillNumDepDate');
         const waybillDateSend = new URLSearchParams(window.location.search).get('waybillDateSend');
         const waybillDepFrom = new URLSearchParams(window.location.search).get('waybillDepFrom');
@@ -128,7 +129,7 @@ function GetNomenclatureWaybillID() {
         const waybillDepTo = new URLSearchParams(window.location.search).get('waybillDepTo');
         const waybillReceiver = new URLSearchParams(window.location.search).get('waybillReceiver');
 
-        // Установка данных на странице
+        // Заполняем элементы страницы данными из URL
         pageElements.waybillNumDepDate.innerHTML = waybillNumDepDate;
         pageElements.waybillSenDate.innerHTML = waybillDateSend;
         pageElements.waybillDepsFrom.innerHTML = waybillDepFrom;
@@ -137,24 +138,22 @@ function GetNomenclatureWaybillID() {
         pageElements.waybillDeppTo.innerHTML = waybillDepTo;
         pageElements.waybillReceiver.innerHTML = waybillReceiver;
 
-        // Загрузка данных о номенклатуре из JSON-файла
+        // Загружаем данные номенклатуры из JSON файла
         fetch('../json/nomenclature.json')
             .then(response => response.json())
             .then(data => {
-                // Фильтруем данные, оставляя только записи с соответствующим ID накладной
+                // Фильтруем данные по ID накладной
                 let needData = data.filter(nomenclature => nomenclature.waybillID == waybillID);
 
+                // Добавляем строки в таблицу
                 needData.forEach(nomenclature => {
-                    // Структура для хранения строки
                     const row = {
                         element: document.createElement('tr'),
-                        cells: [] // Массив ячеек строки
+                        cells: []
                     };
 
-                    // Отрисовка ячеек строки
                     for (let item in nomenclature) {
                         if (Object.prototype.hasOwnProperty.call(nomenclature, item) && item !== 'waybillID' && item !== 'nomenclatureID') {
-                            // Структура для хранения ячейки
                             const cell = {
                                 element: document.createElement('td'),
                                 content: nomenclature[item]
@@ -164,68 +163,57 @@ function GetNomenclatureWaybillID() {
                                 cell.element.textContent = cell.content;
                             }
 
-                            // Добавляем ячейку в строку
                             row.element.appendChild(cell.element);
                             row.cells.push(cell.element);
                         }
                     }
 
-                    // Добавляем обработчик клика по строке
+                    // Добавляем обработчик клика на строку
                     row.element.addEventListener('click', function () {
-                        GetPassportWaybillID(waybillID);
+                        GetPassportNomenclatureID(nomenclature.nomenclatureID);
                         passportTable.style.display = 'table';
-                        //hidePassportTableButton.style.display = 'block';
                     });
 
-                    // Добавляем строку в таблицу
                     tableBody.appendChild(row.element);
                 });
             });
     });
 }
 
-const rows = document.querySelectorAll("#nomTable tr");
+// Функция для получения данных паспорта по ID номенклатуры
+function GetPassportNomenclatureID(nomenclatureID) {
+    // Очищаем таблицу паспорта
+    ClearPassportTable();
 
+    // Получаем тело таблицы паспорта
+    const tableBody = document.querySelector('#passportTable tbody');
 
-//функция для отображения таблицы с СП
-function GetPassportWaybillID() {
-    ClearPassportTable(); // Очистка таблицы паспортов перед загрузкой новых данных
+    // Загружаем данные паспорта из JSON файла
+    fetch('../json/passport.json')
+        .then(response => response.json())
+        .then(data => {
+            // Фильтруем данные по ID номенклатуры
+            let needData = data.filter(passport => passport.nomenclatureID == nomenclatureID);
 
-    const tableBody = document.querySelector('#passportTable tbody'); // Получение тела таблицы паспортов
+            // Добавляем строки в таблицу
+            needData.forEach(passport => {
+                let row = document.createElement('tr');
 
-    // Получение waybillID из URL-параметров
-    new URLSearchParams(window.location.search).forEach((value, name) => {
-        let waybillID = value; // Извлечение значения waybillID из URL-параметров
+                for (let item in passport) {
+                    if (Object.prototype.hasOwnProperty.call(passport, item) && item !== 'waybillID' && item !== 'passportID' && item !== 'nomenclatureID') {
+                        let cell = document.createElement('td');
 
-        // Запрос к JSON-файлу с данными о паспортах
-        fetch('../json/passport.json')
-            .then(response => response.json()) // Преобразование ответа сервера в JSON-объект
-            .then(data => {
-                // Фильтрация данных о паспортах по waybillID
-                let needData = data.filter(passport => passport.waybillID == waybillID);
-
-                // Добавление данных о паспортах в таблицу
-                needData.forEach(passport => {
-                    let row = document.createElement('tr'); // Создание новой строки в таблице
-
-                    // Проход по свойствам объекта 'passport'
-                    for (let item in passport) {
-                        // Проверка, является ли свойство 'passport' собственным (не наследуемым) и не является waybillID, passportID или nomenclatureID
-                        if (Object.prototype.hasOwnProperty.call(passport, item) && item !== 'waybillID' && item !== 'passportID' && item !== 'nomenclatureID') {
-                            let cell = document.createElement('td'); // Создание ячейки в таблице
-
-                            // Добавление значения свойства в ячейку, если оно не равно 0
-                            if (passport[item] !== 0) {
-                                cell.textContent = passport[item];
-                            }
-                            row.appendChild(cell); // Добавление ячейки в строку
+                        if (passport[item] !== 0) {
+                            cell.textContent = passport[item];
                         }
+                        row.appendChild(cell);
                     }
-                    tableBody.appendChild(row); // Добавление строки в таблицу
-                });
+                }
+                tableBody.appendChild(row);
             });
-    });
+        });
 }
+
 
 document.addEventListener('DOMContentLoaded', function () {
     var lastClickedRow = null;
@@ -414,7 +402,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const span = document.getElementsByClassName('close')[0];
     const params = new URLSearchParams(window.location.search);
 
-     // Получение параметров из URL
+    // Получение параметров из URL
     const waybillID = params.get('id');
     const waybillNumDepDate = params.get('waybillNumDepDate');
     const waybillDateSend = params.get('waybillDateSend');

@@ -11,9 +11,94 @@
 
 
 <div class="top-nav">
-    <header>МКАДД Список накладных</header>
-    <div class="about">
+    <header style="display: inline-block; font-size: 24px;">МКАДД Список накладных</header>
 
+    <div class="about" style="display: inline-block; float: right;">
+        <div class="select" style="vertical-align: top;">
+            <!--            <label for="waybillDepFrom" style="float: left; margin-right: 5px; font-size: 18px;">Цех:</label>-->
+            <select id="waybillDepFrom1" style="text-align: right; font-size: 18px;">
+                <option>Цех</option>
+                <option>004</option>
+                <option>084</option>
+                <option>112</option>
+                <option>121</option>
+                <option>129</option>
+                <option>220</option>
+                <option>343</option>
+                <option>435</option>
+                <option>518</option>
+            </select>
+        </div>
+    </div>
+
+<div>
+   <div class="about">
+        <p>
+            <label for="waybillDepFrom2" style="float: left; margin-right: 5px; font-size: 18px;">Цех отправления:</label>
+            <select id="waybillDepFrom2" style="text-align: right; font-size: 18px; margin-right: 20px;">
+                <option>Цех</option>
+                <option>004</option>
+                <option>084</option>
+                <option>112</option>
+                <option>121</option>
+                <option>129</option>
+                <option>220</option>
+                <option>343</option>
+                <option>435</option>
+                <option>518</option>
+            </select>
+        </p>
+
+
+        <p>
+            <label for="waybillDepTo" style="float: left; margin-right: 5px; font-size: 18px;">Цех назначения:</label>
+            <select id="waybillDepTo" style="text-align: right; font-size: 18px; margin-right: 20px;">
+                <option>Цех</option>
+                <option>004</option>
+                <option>084</option>
+                <option>112</option>
+                <option>121</option>
+                <option>129</option>
+                <option>220</option>
+                <option>343</option>
+                <option>435</option>
+                <option>518</option>
+            </select>
+        </p>
+
+        <p>
+            <label for="waybillSender" style="float: left; margin-right: 5px; font-size: 18px;">Отправитель:</label>
+            <select id="waybillSender" style="text-align: right; font-size: 18px; margin-right: 20px; margin-right: 20px;">
+                <option>Отправитель</option>
+                <option>334-Таланов-ВН</option>
+                <option>112-Яшина-ДС</option>
+                <option>518-Хромова-НВ</option>
+                <option>343-Головина-НА</option>
+                <option>435-Бузанова-ЕА</option>
+                <option>004-Калинин-АН</option>
+                <option>435-Сащенко-РР</option>
+                <option>112-Кузьминых-ОК</option>
+                <option>112-Жаркова-НА</option>
+            </select>
+        </p>
+
+        <p>
+            <label for="waybillReceiver" style="float: left; margin-right: 5px; font-size: 18px;">Получатель:</label>
+            <select id="waybillReceiver" style="text-align: right; font-size: 18px; margin-right: 20px; margin-right: 20px;">
+                <option>Получатель</option>
+                <option>334-Таланов-ВН</option>
+                <option>112-Яшина-ДС</option>
+                <option>518-Хромова-НВ</option>
+                <option>343-Головина-НА</option>
+                <option>435-Бузанова-ЕА</option>
+                <option>004-Калинин-АН</option>
+                <option>435-Сащенко-РР</option>
+                <option>112-Кузьминых-ОК</option>
+                <option>112-Жаркова-НА</option>
+            </select>
+        </p>
+
+   </div>
 
         <div class="about">
             <p>
@@ -26,44 +111,37 @@
                 </form>
             </div>
 
-            <div class="select">
-                <select id="waybillDepFrom" style="text-align:right">
-                    <option>Цех</option>
-                    <option>004</option>
-                    <option>129</option>
-                    <option>343</option>
-                    <option>518</option>
-                </select>
-            </div>
-        </div>
-
-        <div id="addWaybillModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Заполните информацию для создания накладной:</h2>
-
-                <form id="infoForm" action="#">
-                    <label for="waybillDep">Цех получения:</label>
-                    <input type="number" id="waybillDep" name="waybillDep">
-
-                    <label for="waybillID">Номер накладной:</label>
-                    <input type="number" id="waybillID" name="waybillID">
-
-                    <label for="waybillNum">Номер заказа:</label>
-                    <input type="number" id="waybillNum" name="waybillNum">
-
-                    <button id="saveWaybillBtn" type="submit">Сохранить</button>
-                </form>
-            </div>
         </div>
 
     </div>
 
+    <div id="addWaybillModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Заполните информацию для создания накладной:</h2>
+
+            <form id="infoForm" action="#">
+                <label for="waybillDep">Цех получения:</label>
+                <input type="number" id="waybillDep" name="waybillDep">
+
+                <label for="waybillID">Номер накладной:</label>
+                <input type="number" id="waybillID" name="waybillID">
+
+                <label for="waybillNum">Номер заказа:</label>
+                <input type="number" id="waybillNum" name="waybillNum">
+
+                <button id="saveWaybillBtn" type="submit">Сохранить</button>
+            </form>
+        </div>
+    </div>
+
 </div>
+
+
 <p>
 <div id="output" class="table">
     <div class="table-container">
-        <table id="waybillTable">
+        <table id="waybillTable" style="height: 400px;">
             <thead>
             <tr>
                 <th data-type="number" rowspan="2">Номер накладной:</th>
@@ -81,27 +159,20 @@
             </thead>
             <tbody>
             <tr class="content">
-                <!— Здесь будут строки с данными —>
+
             </tr>
             </tbody>
         </table>
     </div>
 </div>
+</p>
 
+<p>
+<div class="pagination"></div>
+</p>
+<ul>
 
-<div class="pagination">
-
-    <ul>
-        <!--        <li class = "btn prev"><span><i class = "fas fa-angle-left"></i>Назад</span></li>-->
-        <!--        <li class = "numb active"><span>1</span></li>-->
-        <!--        <li class = "numb"><span>2</span></li>-->
-        <!--        <li class = "dots"><span>...</span></li>-->
-        <!--        <li class = "numb"><span>4</span></li>-->
-        <!--        <li class = "numb"><span>5</span></li>-->
-        <!--        <li class = "dots"><span>...</span></li>-->
-        <!--        <li class = "numb"><span>7</span></li>-->
-        <!--        <li class = "btn next"><span>Вперёд<i class = "fas fa-angle-right"></i></span></li>-->
-    </ul>
+</ul>
 </div>
 <script src="../js/act.js"></script>
 </body>
