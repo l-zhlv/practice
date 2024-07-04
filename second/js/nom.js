@@ -1,21 +1,13 @@
 GetNomenclatureWaybillID(); //вызов функции для отображения
-GetPassportWaybillID(); //вызов функции для отображения таблицы с номенклатурой
+
+//GetPassportWaybillID(); //вызов функции для отображения таблицы с номенклатурой
 
 
 //функция для удаления таблицы СП
-function ClearPassportTable() {
-    const tableBody = document.querySelector('#passportTable tbody');
-    tableBody.innerHTML = ''; // Очищение содержимого tbody
-}
-
-
-ClearPassportTable(); //очистить таблицу с паспортом
-
-// Загрузка данных из waybill.json и сохранение их в локальное хранилище
 fetch('../json/waybill.json')
     .then(response => response.json())
     .then(data => {
-        localStorage.setItem('waybillData', JSON.stringify(data)); // Сохранение JSON-объекта с данными в локальное хранилище под ключом 'waybillData'
+        localStorage.setItem('waybillData', JSON.stringify(data));
     });
 
 // Загрузка данных из nomenclature.json и сохранение их в локальное хранилище
@@ -32,81 +24,88 @@ fetch('../json/passport.json')
         localStorage.setItem('passportData', JSON.stringify(data));
     });
 
-document.getElementById('nomTable').addEventListener('click', function (event) {
-    const secondTable = document.getElementById('passportTable');
+// Функция для очистки таблицы паспорта
+function ClearPassportTable() {
+    const tableBody = document.querySelector('#passportTable tbody');
+    tableBody.innerHTML = ''; // Очищение содержимого tbody
+}
+
+// Функция для загрузки данных о паспортах для указанного nomenclatureID
+function GetPassportNomenclatureID(nomenclatureID) {
+    // Получение ссылки на тело таблицы
     const tableBody = document.querySelector('#passportTable tbody');
 
-    // Проверяем, был ли клик по ячейке таблицы
-    if (event.target.tagName === 'TD') {
-        const currentRow = event.target.closest('tr'); // Находим строку, в которой был клик
-        const waybillID = currentRow.querySelector('td:first-child').textContent; // Получаем ID накладной из первой ячейки строки
+    // Загрузка данных о паспорте из JSON-файла
+    fetch('../json/passport.json')
+        .then(response => response.json()) // Преобразуем ответ сервера в формат JSON
+        .then(data => {
+            // Фильтруем данные, оставляя только записи с соответствующим ID номенклатуры
+            const needData = data.filter(passport => passport.nomenclatureID == nomenclatureID);
 
-        // Структура для хранения элементов второй таблицы
-        const secondTableElements = {
-            tableBody: tableBody, // Тело таблицы
-            rows: [] // Массив строк таблицы
-        };
+            needData.forEach(passport => {
+                let row = document.createElement('tr');
 
-        // Проверяем, скрыта ли вторая таблица
-        if (secondTable.classList.contains('hidden')) {
-            // Показываем вторую таблицу
-            secondTable.classList.remove('hidden'); // Удаляем класс 'hidden', делая таблицу видимой
-            secondTable.classList.add('full-width'); // Добавляем класс 'full-width', чтобы таблица занимала всю ширину
-            secondTableElements.tableBody.innerHTML = ''; // Очищаем тело таблицы
+// Объединяем "Номер паспорта", "Цех" и "Год" в одну ячейку
+                const combinedValue = `${passport.passportNum}/${passport.passportDep} ${passport.passportYear}`;
+                const combinedCell = document.createElement('td');
+                combinedCell.textContent = combinedValue;
+                combinedCell.style.textAlign = 'right'; // Выравнивание по правому краю
+                combinedCell.onclick = () => select_row(combinedCell); // Добавляем обработчик события клика
+                row.appendChild(combinedCell);
 
-            // Загружаем данные о паспорте из JSON-файла
-            fetch('../json/passport.json')
-                .then(response => response.json()) // Преобразуем ответ сервера в формат JSON
-                .then(data => {
-                    // Фильтруем данные, оставляя только записи с соответствующим ID накладной
-                    let needData = data.filter(passport => passport.waybillID == waybillID);
-
-                    // Отрисовка данных в таблицу
-                    needData.forEach(passport => {
-                        // Структура для хранения строки
-                        const row = {
-                            element: document.createElement('tr'), // Создаем элемент строки
-                            cells: [] // Массив ячеек строки
-                        };
-
-                        // Отрисовка ячеек строки
-                        Object.values(passport).forEach(value => {
-                            // Структура для хранения ячейки
-                            const cell = {
-                                element: document.createElement('td'), // Создаем элемент ячейки
-                                content: value // Сохраняем значение ячейки
-                            };
-
-                            // Если значение не равно 0, добавляем текст в ячейку
-                            if (value !== 0) {
-                                cell.element.textContent = cell.content;
-                            }
-
-                            // Добавляем ячейку в строку
-                            row.element.appendChild(cell.element);
-                            row.cells.push(cell.element);
-                        });
-
-                        // Добавляем строку в таблицу
-                        secondTableElements.tableBody.appendChild(row.element);
-                        secondTableElements.rows.push(row.element);
-                    });
+// Добавляем остальные ячейки в строку
+                const detailsCells = ['quantityDetails', 'quantityWorkpieces', 'quantitySamples'];
+                detailsCells.forEach(detail => {
+                    const cell = document.createElement('td');
+                    const value = passport[detail];
+                    if (value !== 0) {
+                        cell.textContent = value;
+                    }
+                    cell.style.textAlign = 'left'; // Выравнивание по левому краю
+                    cell.onclick = () => select_row(cell); // Добавляем обработчик события клика
+                    row.appendChild(cell);
                 });
-        } else {
-            // Скрываем вторую таблицу
-            secondTable.classList.add('hidden'); // класс 'hidden', делаем таблицу невидимой
-            secondTable.classList.remove('full-width'); // Удалить класс 'full-width', чтобы таблица не занимала всю ширину
-            secondTableElements.tableBody.innerHTML = ''; // Очистить тело таблицы
+
+                tableBody.appendChild(row);
+            });
+        });
+
+}
+
+document.getElementById('nomTable').addEventListener('click', function (event) {
+    // Получение ссылки на вторую таблицу
+    const secondTable = document.getElementById('passportTable');
+
+    // Проверка, была ли кликнута ячейка (TD)
+    if (event.target.tagName === 'TD') {
+        // Получение строки, в которой была кликнута ячейка
+        const currentRow = event.target.closest('tr');
+
+        // Извлечение значения nomenclatureID из соответствующей ячейки строки
+        const nomenclatureID = currentRow.querySelector('td:nth-child(1)').textContent;
+
+        // Проверка, скрыта ли вторая таблица
+        if (secondTable.classList.contains('hidden')) {
+            // Отображение второй таблицы
+            secondTable.classList.remove('hidden');
+            secondTable.classList.add('full-width');
         }
+
+        // Очистка тела таблицы
+        ClearPassportTable();
+
+        // Вызов функции для загрузки данных о паспортах для указанного nomenclatureID
+        GetPassportNomenclatureID(nomenclatureID);
     }
 });
 
+// Функция для получения ID номенклатуры из накладной
 function GetNomenclatureWaybillID() {
+    // Получаем тело таблицы и вторую таблицу
     const tableBody = document.querySelector('#nomTable tbody');
     const passportTable = document.querySelector('#passportTable');
-    //const hidePassportTableButton = document.getElementById('hidePassportTableButton');
 
-    // Структура для хранения элементов страницы
+    // Получаем элементы страницы
     const pageElements = {
         waybillNumDepDate: document.querySelector('.waybillNum'),
         waybillSenDate: document.querySelector('.waybillSenDate'),
@@ -117,9 +116,9 @@ function GetNomenclatureWaybillID() {
         waybillReceiver: document.querySelector('.waybillReceiver')
     };
 
-    // Получение данных из URL-параметров
+    // Обрабатываем параметры URL
     new URLSearchParams(window.location.search).forEach((value, name) => {
-        const waybillID = value; // ID накладной
+        const waybillID = value;
         const waybillNumDepDate = new URLSearchParams(window.location.search).get('waybillNumDepDate');
         const waybillDateSend = new URLSearchParams(window.location.search).get('waybillDateSend');
         const waybillDepFrom = new URLSearchParams(window.location.search).get('waybillDepFrom');
@@ -128,7 +127,7 @@ function GetNomenclatureWaybillID() {
         const waybillDepTo = new URLSearchParams(window.location.search).get('waybillDepTo');
         const waybillReceiver = new URLSearchParams(window.location.search).get('waybillReceiver');
 
-        // Установка данных на странице
+        // Заполняем элементы страницы данными из URL
         pageElements.waybillNumDepDate.innerHTML = waybillNumDepDate;
         pageElements.waybillSenDate.innerHTML = waybillDateSend;
         pageElements.waybillDepsFrom.innerHTML = waybillDepFrom;
@@ -137,24 +136,22 @@ function GetNomenclatureWaybillID() {
         pageElements.waybillDeppTo.innerHTML = waybillDepTo;
         pageElements.waybillReceiver.innerHTML = waybillReceiver;
 
-        // Загрузка данных о номенклатуре из JSON-файла
+        // Загружаем данные номенклатуры из JSON файла
         fetch('../json/nomenclature.json')
             .then(response => response.json())
             .then(data => {
-                // Фильтруем данные, оставляя только записи с соответствующим ID накладной
+                // Фильтруем данные по ID накладной
                 let needData = data.filter(nomenclature => nomenclature.waybillID == waybillID);
 
+                // Добавляем строки в таблицу
                 needData.forEach(nomenclature => {
-                    // Структура для хранения строки
                     const row = {
                         element: document.createElement('tr'),
-                        cells: [] // Массив ячеек строки
+                        cells: []
                     };
 
-                    // Отрисовка ячеек строки
                     for (let item in nomenclature) {
                         if (Object.prototype.hasOwnProperty.call(nomenclature, item) && item !== 'waybillID' && item !== 'nomenclatureID') {
-                            // Структура для хранения ячейки
                             const cell = {
                                 element: document.createElement('td'),
                                 content: nomenclature[item]
@@ -164,20 +161,17 @@ function GetNomenclatureWaybillID() {
                                 cell.element.textContent = cell.content;
                             }
 
-                            // Добавляем ячейку в строку
                             row.element.appendChild(cell.element);
                             row.cells.push(cell.element);
                         }
                     }
 
-                    // Добавляем обработчик клика по строке
+                    // Добавляем обработчик клика на строку
                     row.element.addEventListener('click', function () {
-                        GetPassportWaybillID(waybillID);
+                        GetPassportNomenclatureID(nomenclature.nomenclatureID);
                         passportTable.style.display = 'table';
-                        //hidePassportTableButton.style.display = 'block';
                     });
 
-                    // Добавляем строку в таблицу
                     tableBody.appendChild(row.element);
                 });
             });
@@ -414,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const span = document.getElementsByClassName('close')[0];
     const params = new URLSearchParams(window.location.search);
 
-     // Получение параметров из URL
+    // Получение параметров из URL
     const waybillID = params.get('id');
     const waybillNumDepDate = params.get('waybillNumDepDate');
     const waybillDateSend = params.get('waybillDateSend');

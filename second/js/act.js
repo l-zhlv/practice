@@ -57,6 +57,122 @@ function select_row(row) {
     row.classList.add('selected'); // Добавляем класс 'selected' кликнутой строке
 }
 
+
+// Функция для удаления ведущих нулей из строки (004, 084)
+function removeLeadingZeros(str) {
+    return str.replace(/^0+/, '');
+}
+
+// Функция для фильтрации по цехам
+function filterTable() {
+    // Получаем значения фильтров и убираем ведущие нули
+    const depFrom = removeLeadingZeros(document.getElementById("waybillDepFrom2").value);
+    const depTo = removeLeadingZeros(document.getElementById("waybillDepTo").value);
+
+    // Получаем все строки таблицы
+    const tableRows = document.querySelectorAll("#waybillTable tbody tr");
+    const filteredRows = [];
+
+    // Проходим по каждой строке таблицы и фильтруем их
+    tableRows.forEach(row => {
+        const depFromCell = removeLeadingZeros(row.querySelector("td:nth-child(3)").textContent); // указание колонки с цехом отправления
+        const depToCell = removeLeadingZeros(row.querySelector("td:nth-child(6)").textContent); // указание колонки с цехом получения
+
+        // Проверяем соответствие фильтру
+        if ((depFrom === "Цех" || depFrom === depFromCell) && (depTo === "Цех" || depTo === depToCell)) {
+            filteredRows.push(row);
+        }
+    });
+
+    // Скрыть все строки перед отображением отфильтрованных данных
+    tableRows.forEach(row => {
+        row.style.display = "none";
+    });
+
+    // Показать отфильтрованные строки
+    filteredRows.forEach(row => {
+        row.style.display = "";
+    });
+
+    // Пересчитать количество страниц и перестроить пагинацию
+    const rowsPerPage = 10; // Задаем количество строк на странице
+    const pageCount = Math.ceil(filteredRows.length / rowsPerPage);
+    CreatePagination(pageCount, 1, document.querySelector('.pagination'));
+
+    // Показать первую страницу отфильтрованных данных
+    showPage(1, rowsPerPage, filteredRows);
+}
+
+// Функция для показа конкретной страницы данных
+function showPage(pageNumber, rowsPerPage, filteredRows) {
+    const start = (pageNumber - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    filteredRows.forEach(row => {
+        row.style.display = "none";
+    });
+
+    for (let i = start; i < end && i < filteredRows.length; i++) {
+        filteredRows[i].style.display = "";
+    }
+}
+
+// Добавляем обработчики событий на изменение фильтров
+document.getElementById("waybillDepFrom2").addEventListener("change", filterTable);
+document.getElementById("waybillDepTo").addEventListener("change", filterTable);
+
+// Функция для фильтрации и сортировки по именам
+function filterAndSortTable() {
+    // Получаем значения фильтров и убираем ведущие нули
+    const sender = document.getElementById("waybillSender").value;
+    const receiver = document.getElementById("waybillReceiver").value;
+
+    // Получаем все строки таблицы
+    const tableRows = document.querySelectorAll("#waybillTable tbody tr");
+    const filteredRows = [];
+
+    // Проходим по каждой строке таблицы и фильтруем их
+    tableRows.forEach(row => {
+        const senderCell = row.querySelector("td:nth-child(4)").textContent; // указание колонки с отправителем
+        const receiverCell = row.querySelector("td:nth-child(7)").textContent; // указание колонки с получателем
+
+        // Проверяем соответствие фильтру
+        if ((sender === "Отправитель" || sender === senderCell) && (receiver === "Получатель" || receiver === receiverCell)) {
+            filteredRows.push(row);
+        }
+    });
+
+    // Сортировка по именам отправителей
+    filteredRows.sort((a, b) => {
+        const senderA = a.querySelector("td:nth-child(2)").textContent;
+        const senderB = b.querySelector("td:nth-child(2)").textContent;
+        return senderA.localeCompare(senderB);
+    });
+
+    // Скрыть все строки перед отображением отфильтрованных данных
+    tableRows.forEach(row => {
+        row.style.display = "none";
+    });
+
+    // Показать отфильтрованные строки
+    filteredRows.forEach(row => {
+        row.style.display = "";
+    });
+
+    // Пересчитать количество страниц и перестроить пагинацию
+    const rowsPerPage = 10; // Задаем количество строк на странице
+    const pageCount = Math.ceil(filteredRows.length / rowsPerPage);
+    CreatePagination(pageCount, 1, document.querySelector('.pagination'));
+
+    // Показать первую страницу отфильтрованных данных
+    showPage(1, rowsPerPage, filteredRows);
+}
+
+
+// Добавляем обработчики событий на изменение фильтров
+document.getElementById("waybillSender").addEventListener("change", filterAndSortTable);
+document.getElementById("waybillReceiver").addEventListener("change", filterAndSortTable);
+
 function searchInJSON(searchValue) {
     // Загружаем JSON-файл с данными о накладных
     fetch('../json/waybill.json')
@@ -343,11 +459,11 @@ fetch('../json/waybill.json') //подключение файла с инфор�
                 });
 //вывод данных
                 row.innerHTML = `
-                    <td onclick='select_row(this)' style="text-align: right;">${waybill.waybillNum}/${waybill.waybillDep} ${GetDate(waybill.waybillDate)}</td>
-                    <td onclick='select_row(this)' style="text-align: left;">${GetDateAndTime(waybill.waybillSendDate)}</td>
+                    <td onclick='select_row(this)' style="text-align: right;">${waybill.waybillNum}/${waybill.waybillDep} ${waybill.waybillDate ? GetDate(waybill.waybillDate) : ''}</td>
+                    <td onclick='select_row(this)' style="text-align: left;">${waybill.waybillSendDate ? GetDateAndTime(waybill.waybillSendDate) : ''}</td> <!-- проверка на наличие значения даты -->
                     <td onclick='select_row(this)' style="text-align: right;">${waybill.waybillDepFrom}</td>
                     <td onclick='select_row(this)' style="text-align: left;">${waybill.waybillSender}</td>
-                    <td onclick='select_row(this)' style="text-align: left;">${GetDateAndTime(waybill.waybillReceiveDate)}</td>
+                    <td onclick='select_row(this)' style="text-align: left;">${waybill.waybillReceiveDate ? GetDateAndTime(waybill.waybillReceiveDate) : ''}</td> <!-- проверка на наличие значения даты -->
                     <td onclick='select_row(this)' style="text-align: right;">${waybill.waybillDepTo}</td>
                     <td onclick='select_row(this)' style="text-align: left;">${waybill.waybillReceiver}</td>
                     `;
@@ -357,7 +473,7 @@ fetch('../json/waybill.json') //подключение файла с инфор�
 
         const tableBody = document.querySelector('.table tbody')
         const pagination = document.querySelector('.pagination');
-        let rowsCount = 20;//количество строк данных на одной странице
+        let rowsCount = 10;//количество строк данных на одной странице
         let active; //переменная для хранения активной кнопки отобращения страницы
         let pageCount = Math.ceil(data.length / rowsCount)//количество страниц с данными
 
