@@ -24,7 +24,7 @@ fetch('../json/passport.json')
         localStorage.setItem('passportData', JSON.stringify(data));
     });
 
-<<<<<<< HEAD
+
 // Функция для очистки таблицы паспорта
 function ClearPassportTable() {
     const tableBody = document.querySelector('#passportTable tbody');
@@ -32,17 +32,7 @@ function ClearPassportTable() {
 }
 
 // Функция для загрузки данных о паспортах для указанного nomenclatureID
-function GetPassportNomenclatureID(nomenclatureID) {
-    // Получение ссылки на тело таблицы
-    const tableBody = document.querySelector('#passportTable tbody');
 
-    // Загрузка данных о паспорте из JSON-файла
-    fetch('../json/passport.json')
-        .then(response => response.json()) // Преобразуем ответ сервера в формат JSON
-        .then(data => {
-            // Фильтруем данные, оставляя только записи с соответствующим ID номенклатуры
-            const needData = data.filter(passport => passport.nomenclatureID == nomenclatureID);
-=======
 function GetPassportNomenclatureID(nomenclatureID) {
 // Очищаем таблицу паспорта
     ClearPassportTable();
@@ -56,7 +46,7 @@ function GetPassportNomenclatureID(nomenclatureID) {
         .then(data => {
 // Фильтруем данные по ID номенклатуры
             let needData = data.filter(passport => passport.nomenclatureID == nomenclatureID);
->>>>>>> 0d4396c8eca6502718f0b1c54d2af16e773549fd
+
 
             needData.forEach(passport => {
                 let row = document.createElement('tr');
@@ -91,32 +81,30 @@ function GetPassportNomenclatureID(nomenclatureID) {
 document.getElementById('nomTable').addEventListener('click', function (event) {
     // Получение ссылки на вторую таблицу
     const secondTable = document.getElementById('passportTable');
-<<<<<<< HEAD
-=======
+
     // Получение тела таблицы
     const tableBody = document.querySelector('#passportTable tbody');
->>>>>>> 0d4396c8eca6502718f0b1c54d2af16e773549fd
+
 
     // Проверка, была ли кликнута ячейка (TD)
     if (event.target.tagName === 'TD') {
         // Получение строки, в которой была кликнута ячейка
         const currentRow = event.target.closest('tr');
 
-<<<<<<< HEAD
+
         // Извлечение значения nomenclatureID из соответствующей ячейки строки
         const nomenclatureID = currentRow.querySelector('td:nth-child(1)').textContent;
-=======
+
         // Извлечение значения nomenclatureID из второй ячейки строки
-        const nomenclatureID = currentRow.querySelector('td:nth-child(2)').textContent;
->>>>>>> 0d4396c8eca6502718f0b1c54d2af16e773549fd
+      //  const nomenclatureID = currentRow.querySelector('td:nth-child(2)').textContent;
+
 
         // Проверка, скрыта ли вторая таблица
         if (secondTable.classList.contains('hidden')) {
             // Отображение второй таблицы
             secondTable.classList.remove('hidden');
             secondTable.classList.add('full-width');
-<<<<<<< HEAD
-=======
+
             // Очистка тела таблицы
             tableBody.innerHTML = '';
 
@@ -128,7 +116,7 @@ document.getElementById('nomTable').addEventListener('click', function (event) {
             secondTable.classList.remove('full-width');
             // Очистка тела таблицы
             tableBody.innerHTML = '';
->>>>>>> 0d4396c8eca6502718f0b1c54d2af16e773549fd
+
         }
 
         // Очистка тела таблицы
